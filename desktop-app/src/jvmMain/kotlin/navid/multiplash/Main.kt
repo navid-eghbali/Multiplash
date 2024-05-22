@@ -9,6 +9,6 @@ fun main() = application {
         onCloseRequest = ::exitApplication,
         title = "Multiplash",
     ) {
-        App()
+        App(dynamicColor = false)
     }
 }

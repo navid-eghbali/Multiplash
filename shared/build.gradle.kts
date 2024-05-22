@@ -38,10 +38,4 @@ kotlin {
 
 android {
     namespace = "navid.multiplash.shared"
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    sourceSets["main"].res.srcDirs("src/androidMain/res")
-
-    kotlin {
-        jvmToolchain(17)
-    }
 }
