@@ -3,6 +3,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".MultiplashApplication"
         android:allowBackup="true"
         android:label="Multiplash"
         android:supportsRtl="true"
