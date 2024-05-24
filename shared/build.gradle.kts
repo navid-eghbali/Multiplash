@@ -26,6 +26,7 @@ kotlin {
             }
         }
         commonMain.dependencies {
+            api(projects.coreApi)
             api(projects.coreAsync)
             api(projects.coreDi)
             api(projects.coreUi)

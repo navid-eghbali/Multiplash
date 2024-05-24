@@ -1,6 +1,8 @@
 package navid.multiplash.shared.di
 
 import android.app.Application
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import me.tatarka.inject.annotations.Component
 import me.tatarka.inject.annotations.Provides
 import navid.multiplash.core.async.CoroutineDispatchers
@@ -16,3 +18,5 @@ abstract class AndroidApplicationComponent(
 
     companion object
 }
+
+internal actual fun ioDispatcher(): CoroutineDispatcher = Dispatchers.IO
