@@ -7,11 +7,10 @@ plugins {
 kotlin {
     androidTarget()
     sourceSets {
-        val androidMain by getting {
-            dependencies {
-                implementation(projects.shared)
-                implementation(libs.androidx.activity.compose)
-            }
+        androidMain.dependencies {
+            implementation(projects.shared)
+
+            implementation(libs.androidx.activity.compose)
         }
     }
 }

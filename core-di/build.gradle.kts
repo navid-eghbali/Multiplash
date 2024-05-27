@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.ksp)
 }
 
 kotlin {
@@ -20,12 +19,4 @@ kotlin {
 
 android {
     namespace = "navid.multiplash.core.di"
-}
-
-ksp {
-    arg("me.tatarka.inject.generateCompanionExtensions", "true")
-}
-
-dependencies {
-    ksp(libs.kotlininject.compiler)
 }

@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.build.konfig)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
 }
 
 kotlin {
@@ -19,8 +20,8 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.coreDi)
 
+            api(libs.ktor.client.core)
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.client.logging)
             implementation(libs.ktor.serialization.json)
@@ -46,6 +47,17 @@ buildkonfig {
     defaultConfigs {
         buildConfigField(STRING, "UNSPLASH_CLIENT_ID", getApiKey())
     }
+}
+
+ksp {
+    arg("me.tatarka.inject.generateCompanionExtensions", "true")
+}
+
+dependencies {
+    add("kspAndroid", libs.kotlininject.compiler)
+    add("kspIosArm64", libs.kotlininject.compiler)
+    add("kspIosSimulatorArm64", libs.kotlininject.compiler)
+    add("kspJvm", libs.kotlininject.compiler)
 }
 
 fun getApiKey(): String {

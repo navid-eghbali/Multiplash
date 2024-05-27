@@ -23,4 +23,5 @@ include(
     ":core-ui",
     ":desktop-app",
     ":shared",
+    ":ui-home",
 )

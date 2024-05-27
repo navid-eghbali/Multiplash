@@ -9,28 +9,15 @@ kotlin {
     applyDefaultHierarchyTemplate()
     androidTarget()
     jvm("desktop")
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach {
-        it.binaries.framework {
-            isStatic = true
-            baseName = "SharedKit"
-        }
-    }
+    iosArm64()
+    iosSimulatorArm64()
 
     sourceSets {
-        all {
-            languageSettings {
-                optIn("org.jetbrains.compose.resources.ExperimentalResourceApi")
-            }
-        }
         commonMain.dependencies {
-            api(projects.coreApi)
-            api(projects.coreAsync)
-            api(projects.coreDi)
-            api(projects.coreUi)
-            implementation(projects.uiHome)
+            implementation(projects.coreApi)
+            implementation(projects.coreAsync)
+            implementation(projects.coreDi)
+            implementation(projects.coreUi)
 
             implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.kotlininject.runtime)
@@ -39,14 +26,12 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
         }
     }
 }
 
 android {
-    namespace = "navid.multiplash.shared"
+    namespace = "navid.multiplash.ui.home"
 }
 
 ksp {
