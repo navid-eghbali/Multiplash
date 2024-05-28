@@ -6,7 +6,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import navid.multiplash.core.ui.designsystem.AppTheme
+import navid.multiplash.core.ui.AppTheme
 import navid.multiplash.ui.home.HomeScreen
 
 @Composable

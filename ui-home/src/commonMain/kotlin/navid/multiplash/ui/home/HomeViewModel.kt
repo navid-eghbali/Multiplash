@@ -9,17 +9,18 @@ import io.ktor.client.request.url
 import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Inject
 import navid.multiplash.core.api.data.Photo
-import navid.multiplash.core.ui.Greeting
+import navid.multiplash.core.async.CoroutineDispatchers
 
 @Inject
 class HomeViewModel(
+    private val dispatchers: CoroutineDispatchers,
     private val httpClient: HttpClient,
 ) : ViewModel() {
 
-    val text: String = Greeting().greet()
+    val text: String = "Hello"
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatchers.io) {
             val request = httpClient.get {
                 url("https://api.unsplash.com/photos?order_by=popular&orientation=squarish&per_page=40")
             }

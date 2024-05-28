@@ -1,4 +1,4 @@
-package navid.multiplash.core.ui.designsystem
+package navid.multiplash.core.ui
 
 import androidx.compose.runtime.Composable
 

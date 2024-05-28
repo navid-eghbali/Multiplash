@@ -1,4 +1,4 @@
-package navid.multiplash.core.ui.designsystem
+package navid.multiplash.core.ui
 
 import android.os.Build
 import androidx.annotation.ChecksSdkIntAtLeast
@@ -7,6 +7,10 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import navid.multiplash.core.ui.designsystem.AppDarkColors
+import navid.multiplash.core.ui.designsystem.AppLightColors
+import navid.multiplash.core.ui.designsystem.AppShapes
+import navid.multiplash.core.ui.designsystem.AppTypography
 
 @Composable
 actual fun AppTheme(
