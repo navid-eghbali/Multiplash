@@ -20,7 +20,6 @@ struct iOSApp: App {
     
 	var body: some Scene {
 		WindowGroup {
-            let dispatchers = delegate.applicationComponent.dispatchers
 			ContentView()
 		}
 	}

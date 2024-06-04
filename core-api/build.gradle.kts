@@ -12,7 +12,7 @@ plugins {
 kotlin {
     applyDefaultHierarchyTemplate()
     androidTarget()
-    jvm()
+    jvm("desktop")
     iosArm64()
     iosSimulatorArm64()
 
@@ -32,8 +32,10 @@ kotlin {
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
         }
-        jvmMain.dependencies {
-            implementation(libs.ktor.client.okhttp)
+        val desktopMain by getting {
+            dependencies {
+                implementation(libs.ktor.client.okhttp)
+            }
         }
     }
 }
@@ -57,7 +59,7 @@ dependencies {
     add("kspAndroid", libs.kotlininject.compiler)
     add("kspIosArm64", libs.kotlininject.compiler)
     add("kspIosSimulatorArm64", libs.kotlininject.compiler)
-    add("kspJvm", libs.kotlininject.compiler)
+    add("kspDesktop", libs.kotlininject.compiler)
 }
 
 fun getApiKey(): String {

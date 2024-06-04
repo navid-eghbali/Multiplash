@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.ui.Modifier
 import navid.multiplash.shared.App
 import navid.multiplash.shared.di.AndroidApplicationComponent
 
@@ -15,10 +16,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         val applicationComponent = AndroidApplicationComponent.from(this)
-        println("BOOGH> ${applicationComponent.dispatchers.main}")
 
         setContent {
-            App(dynamicColor = true)
+            App(
+                dynamicColor = true,
+                modifier = Modifier,
+            )
         }
     }
 }

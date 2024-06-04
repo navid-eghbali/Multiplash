@@ -6,31 +6,33 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.url
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Inject
-import navid.multiplash.core.api.data.Photo
-import navid.multiplash.core.async.CoroutineDispatchers
 
 @Inject
 class HomeViewModel(
-    private val dispatchers: CoroutineDispatchers,
     private val httpClient: HttpClient,
 ) : ViewModel() {
 
-    val text: String = "Hello"
+    private val _state = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
+    val state = _state.asStateFlow()
 
     init {
-        viewModelScope.launch(dispatchers.io) {
+        viewModelScope.launch {
             val request = httpClient.get {
                 url("https://api.unsplash.com/photos?order_by=popular&orientation=squarish&per_page=40")
             }
-            val response: List<Photo> = try {
-                request.body()
-            } catch (throwable: Throwable) {
-                throwable.printStackTrace()
-                emptyList()
+            _state.update {
+                try {
+                    HomeUiState.Success(request.body())
+                } catch (throwable: Throwable) {
+                    throwable.printStackTrace()
+                    HomeUiState.Error(throwable.message.toString())
+                }
             }
-            println(response)
         }
     }
 

@@ -13,7 +13,15 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.coreDi)
-            api(libs.kotlinx.coroutines)
+            api(libs.kotlinx.coroutines.core)
+        }
+        androidMain.dependencies {
+            api(libs.kotlinx.coroutines.android)
+        }
+        val desktopMain by getting {
+            dependencies {
+                api(libs.kotlinx.coroutines.swing)
+            }
         }
     }
 }

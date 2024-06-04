@@ -20,6 +20,9 @@ kotlin {
             implementation(projects.coreUi)
 
             implementation(libs.androidx.lifecycle.viewmodel.compose)
+            implementation(libs.coil.core)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network)
             implementation(libs.kotlininject.runtime)
 
             implementation(compose.runtime)

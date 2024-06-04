@@ -1,23 +1,15 @@
 package navid.multiplash.core.async.di
 
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import me.tatarka.inject.annotations.Provides
 import navid.multiplash.core.async.CoroutineDispatchers
 import navid.multiplash.core.async.FireAndForgetCoroutineScope
 import navid.multiplash.core.di.ApplicationScope
 
-interface CoreAsyncComponent {
+expect interface CoreAsyncPlatformComponent
 
-    @ApplicationScope
-    @Provides
-    fun provideCoroutineDispatchers(): CoroutineDispatchers = CoroutineDispatchers(
-        io = ioDispatcher(),
-        computation = Dispatchers.Default,
-        main = Dispatchers.Main,
-    )
+interface CoreAsyncComponent : CoreAsyncPlatformComponent {
 
     @ApplicationScope
     @Provides
@@ -25,5 +17,3 @@ interface CoreAsyncComponent {
         dispatchers: CoroutineDispatchers
     ): FireAndForgetCoroutineScope = CoroutineScope(dispatchers.main + SupervisorJob())
 }
-
-internal expect fun ioDispatcher(): CoroutineDispatcher

@@ -7,11 +7,13 @@ plugins {
 
 kotlin {
     applyDefaultHierarchyTemplate()
-    jvm()
+    jvm("desktop")
     sourceSets {
-        jvmMain.dependencies {
-            implementation(projects.shared)
-            implementation(compose.desktop.currentOs)
+        val desktopMain by getting {
+            dependencies {
+                implementation(projects.shared)
+                implementation(compose.desktop.currentOs)
+            }
         }
     }
 }

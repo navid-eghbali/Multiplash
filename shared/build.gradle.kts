@@ -30,7 +30,7 @@ kotlin {
             api(projects.coreAsync)
             api(projects.coreDi)
             api(projects.coreUi)
-            implementation(projects.uiHome)
+            api(projects.uiHome)
 
             implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.kotlininject.runtime)
