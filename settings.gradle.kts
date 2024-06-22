@@ -22,6 +22,8 @@ include(
     ":core-di",
     ":core-ui",
     ":desktop-app",
+    ":kodein-viewmodel",
     ":shared",
     ":ui-home",
+    ":ui-search",
 )

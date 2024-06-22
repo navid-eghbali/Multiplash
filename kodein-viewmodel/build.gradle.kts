@@ -13,24 +13,20 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.coreApi)
-            implementation(projects.coreAsync)
             implementation(projects.coreDi)
-            implementation(projects.coreUi)
-            implementation(projects.kodeinViewmodel)
-
-            implementation(libs.coil.core)
-            implementation(libs.coil.compose)
-            implementation(libs.coil.network)
+            api(libs.androidx.lifecycle.viewmodel.compose)
+            api(libs.androidx.navigation.compose)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.ui)
+            implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
         }
     }
 }
 
 android {
-    namespace = "navid.multiplash.ui.home"
+    namespace = "navid.multiplash.kodein.viewmodel"
 }

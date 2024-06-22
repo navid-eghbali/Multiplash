@@ -32,5 +32,5 @@ kotlin {
 }
 
 android {
-    namespace = "navid.multiplash.ui.home"
+    namespace = "navid.multiplash.ui.search"
 }

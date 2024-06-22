@@ -12,7 +12,9 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(libs.kotlininject.runtime)
+            api(libs.kodein.di)
+            api(libs.kodein.di.conf)
+            api(libs.kodein.di.framework.compose)
         }
     }
 }

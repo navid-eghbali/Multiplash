@@ -16,15 +16,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
-import navid.multiplash.ui.home.di.HomeModule
+import navid.multiplash.kodein.viewmodel.rememberViewModel
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = viewModel { HomeModule.component.homeViewModel },
     modifier: Modifier = Modifier,
 ) {
+    val viewModel: HomeViewModel by rememberViewModel()
     val state by viewModel.state.collectAsState()
     HomeScreen(
         state = state,

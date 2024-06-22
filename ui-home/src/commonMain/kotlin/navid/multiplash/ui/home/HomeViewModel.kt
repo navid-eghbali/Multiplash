@@ -10,9 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import me.tatarka.inject.annotations.Inject
 
-@Inject
 class HomeViewModel(
     private val httpClient: HttpClient,
 ) : ViewModel() {
@@ -21,6 +19,7 @@ class HomeViewModel(
     val state = _state.asStateFlow()
 
     init {
+        println("BOOGH> $this")
         viewModelScope.launch {
             val request = httpClient.get {
                 url("https://api.unsplash.com/photos?order_by=popular&orientation=squarish&per_page=40")
