@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -13,20 +14,24 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(projects.core.api)
             implementation(projects.core.di)
-            api(libs.androidx.lifecycle.viewmodel.compose)
-            api(libs.androidx.navigation.compose)
+            implementation(projects.core.ui)
+            implementation(projects.kodeinViewmodel)
+
+            implementation(libs.coil.core)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network)
+            implementation(libs.kotlinx.serialization.json)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
         }
     }
 }
 
 android {
-    namespace = "navid.multiplash.kodein.viewmodel"
+    namespace = "navid.multiplash.feature.home"
 }

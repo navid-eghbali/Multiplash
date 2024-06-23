@@ -8,8 +8,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import navid.multiplash.core.ui.AppTheme
+import navid.multiplash.feature.home.ui.HomeScreen
 import navid.multiplash.shared.di.appModule
-import navid.multiplash.ui.home.HomeScreen
 import org.kodein.di.compose.withDI
 
 @Composable

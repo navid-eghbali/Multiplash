@@ -25,12 +25,12 @@ kotlin {
             }
         }
         commonMain.dependencies {
-            api(projects.coreApi)
-            api(projects.coreAsync)
-            api(projects.coreDi)
-            api(projects.coreUi)
+            api(projects.core.api)
+            api(projects.core.async)
+            api(projects.core.di)
+            api(projects.core.ui)
             api(projects.kodeinViewmodel)
-            api(projects.uiHome)
+            api(projects.feature.home)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
