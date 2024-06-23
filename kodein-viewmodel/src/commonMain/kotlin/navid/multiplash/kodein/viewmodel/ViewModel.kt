@@ -37,8 +37,6 @@ inline fun <reified VM : ViewModel> rememberViewModel(
     }
 }
 
-inline fun <reified VM : ViewModel> getKClassForGenericType(): KClass<VM> = VM::class
-
 /**
  * Gets an instance of a [VM] as an android [ViewModel] for the given [tag].
  *
@@ -63,9 +61,9 @@ inline fun <reified VM : ViewModel> viewModel(
             KodeinViewModelScopedSingleton(di = di, tag = tag)
         )
         if (tag == null) {
-            provider[VM::class]
+            provider[getKClassForGenericType()]
         } else {
-            provider[tag.toString(), VM::class]
+            provider[tag.toString(), getKClassForGenericType()]
         }
     }
 }
@@ -94,7 +92,7 @@ inline fun <reified A : Any, reified VM : ViewModel> rememberViewModel(
 
     remember {
         ViewModelLazy(
-            viewModelClass = VM::class,
+            viewModelClass = getKClassForGenericType(),
             storeProducer = { viewModelStoreOwner.viewModelStore },
             factoryProducer = {
                 KodeinViewModelScopedFactory(
@@ -136,9 +134,11 @@ inline fun <reified A : Any, reified VM : ViewModel> viewModel(
             KodeinViewModelScopedFactory(di = di, argType = generic<A>(), arg = arg, tag = tag)
         )
         if (tag == null) {
-            provider[VM::class]
+            provider[getKClassForGenericType()]
         } else {
-            provider[tag.toString(), VM::class]
+            provider[tag.toString(), getKClassForGenericType()]
         }
     }
 }
+
+inline fun <reified VM : ViewModel> getKClassForGenericType(): KClass<VM> = VM::class

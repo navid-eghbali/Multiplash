@@ -29,8 +29,10 @@ fun main() = application {
 
 private fun getWindowSize(): DpSize {
     val screenSize = Toolkit.getDefaultToolkit().screenSize
+    val width = (screenSize.width * 0.8).toInt()
+    val height = (screenSize.height * 0.8).toInt()
     return DpSize(
-        width = (screenSize.width * 0.8).toInt().dp,
-        height = (screenSize.height * 0.8).toInt().dp,
+        width = width.dp,
+        height = height.dp,
     )
 }

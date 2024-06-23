@@ -23,6 +23,8 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.network)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.paging.common)
+            implementation(libs.paging.compose)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
