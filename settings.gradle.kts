@@ -22,6 +22,7 @@ include(
     ":core:di",
     ":core:ui",
     ":desktop-app",
+    ":feature:details",
     ":feature:home",
     ":kodein-viewmodel",
     ":shared",

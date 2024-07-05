@@ -1,11 +1,21 @@
 package navid.multiplash.feature.home.data.model
 
+import io.ktor.http.Parameters
+import io.ktor.http.parameters
 import kotlinx.serialization.Serializable
 
 object GetPhotos {
 
-    @Serializable
     data class Response(val photos: List<Photo>)
+
+    fun getPath(): String = "/photos"
+
+    fun getQueryParameters(page: Int, pageSize: Int): Parameters = parameters {
+        append("order_by", "popular")
+        append("orientation", "squarish")
+        append("per_page", pageSize.toString())
+        append("page", page.toString())
+    }
 }
 
 @Serializable

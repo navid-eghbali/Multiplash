@@ -34,7 +34,7 @@ val homeModule = DI.Module(name = "HomeModule") {
 
     bindProvider {
         HomeViewModel(
-            homeClient = instance(),
+            getPhotosUseCase = instance(),
         )
     }
 }
