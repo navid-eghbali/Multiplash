@@ -1,20 +1,17 @@
 [versions]
-agp = "8.4.1"
+agp = "8.4.2"
 android-compile-sdk = "34"
 android-min-sdk = "24"
 android-target-sdk = "34"
 androidx-activity-compose = "1.9.0"
 build-konfig-plugin = "0.15.1"
-coil = "3.0.0-alpha06"
-compose-bom = "2024.05.00"
-compose-plugin = "1.6.1"
+coil = "3.0.0-alpha07"
+compose-plugin = "1.6.11"
 coroutines = "1.8.1"
 kodein = "7.22.0"
-kotlin = "1.9.23"
-kotlinx-serialization = "1.6.3"
-ksp = "1.9.23-1.0.20"
-ktor = "2.3.11"
-material3 = "1.2.1"
+kotlin = "2.0.0"
+kotlinx-serialization = "1.7.1"
+ktor = "2.3.12"
 paging = "3.3.0-alpha02-0.5.1"
 
 [plugins]
@@ -23,19 +20,13 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 build-konfig = { id = "com.codingfeline.buildkonfig", version.ref = "build-konfig-plugin" }
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
-androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
-androidx-compose-foundation = { module = "androidx.compose.foundation:foundation" }
-androidx-compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
-androidx-compose-ui = { module = "androidx.compose.ui:ui" }
-androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
-androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-lifecycle-viewmodel-compose = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0"
 androidx-navigation-compose = "org.jetbrains.androidx.navigation:navigation-compose:2.7.0-alpha07"
 
@@ -46,7 +37,6 @@ coil-network = { module = "io.coil-kt.coil3:coil-network-ktor", version.ref = "c
 kodein-di = { module = "org.kodein.di:kodein-di", version.ref = "kodein" }
 kodein-di-conf = { module = "org.kodein.di:kodein-di-conf", version.ref = "kodein" }
 kodein-di-framework-compose = { module = "org.kodein.di:kodein-di-framework-compose", version.ref = "kodein" }
-kodein-di-framework-androidx-compose = { module = "org.kodein.di:kodein-di-framework-androidx-compose", version.ref = "kodein" }
 
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }

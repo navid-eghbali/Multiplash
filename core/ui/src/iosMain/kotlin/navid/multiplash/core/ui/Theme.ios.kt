@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import navid.multiplash.core.ui.designsystem.AppDarkColors
 import navid.multiplash.core.ui.designsystem.AppLightColors
 import navid.multiplash.core.ui.designsystem.AppShapes
+import navid.multiplash.core.ui.designsystem.AppTypography
 
 @Composable
 actual fun AppTheme(
@@ -15,6 +16,7 @@ actual fun AppTheme(
     MaterialTheme(
         colorScheme = if (darkTheme) AppDarkColors else AppLightColors,
         shapes = AppShapes,
+        typography = AppTypography,
         content = content
     )
 }

@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.multiplatform)
 }
 
@@ -30,6 +31,7 @@ kotlin {
             implementation(projects.core.di)
             implementation(projects.core.ui)
             implementation(projects.kodeinViewmodel)
+            implementation(projects.feature.details)
             implementation(projects.feature.home)
 
             implementation(compose.runtime)
