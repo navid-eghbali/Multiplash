@@ -29,6 +29,7 @@ kotlin {
             implementation(projects.core.api)
             implementation(projects.core.async)
             implementation(projects.core.di)
+            implementation(projects.core.resources)
             implementation(projects.core.ui)
             implementation(projects.kodeinViewmodel)
             implementation(projects.feature.details)
@@ -46,4 +47,8 @@ kotlin {
 
 android {
     namespace = "navid.multiplash.shared"
+
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+    sourceSets["main"].res.srcDirs("src/androidMain/res")
+    sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 }

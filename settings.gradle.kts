@@ -20,6 +20,7 @@ include(
     ":core:api",
     ":core:async",
     ":core:di",
+    ":core:resources",
     ":core:ui",
     ":desktop-app",
     ":feature:details",

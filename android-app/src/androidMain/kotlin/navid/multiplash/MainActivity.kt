@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.Modifier
-import navid.multiplash.shared.App
+import navid.multiplash.shared.ui.App
 
 class MainActivity : ComponentActivity() {
 

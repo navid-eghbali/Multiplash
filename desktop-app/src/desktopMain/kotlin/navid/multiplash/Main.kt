@@ -8,7 +8,7 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
-import navid.multiplash.shared.App
+import navid.multiplash.shared.ui.App
 import java.awt.Toolkit
 
 fun main() = application {
