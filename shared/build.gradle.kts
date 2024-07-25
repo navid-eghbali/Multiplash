@@ -33,7 +33,9 @@ kotlin {
             implementation(projects.core.ui)
             implementation(projects.kodeinViewmodel)
             implementation(projects.feature.details)
-            implementation(projects.feature.home)
+            implementation(projects.feature.explore)
+            implementation(projects.feature.library)
+            implementation(projects.feature.search)
 
             implementation(compose.runtime)
             implementation(compose.foundation)

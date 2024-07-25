@@ -1,5 +1,8 @@
 package navid.multiplash.shared.ui
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,9 +32,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import navid.multiplash.core.ui.AppTheme
 import navid.multiplash.core.ui.LocalWindowSizeClass
-import navid.multiplash.feature.home.ui.HomeScreen
+import navid.multiplash.feature.explore.ui.ExploreScreen
+import navid.multiplash.feature.library.ui.LibraryScreen
+import navid.multiplash.feature.search.ui.SearchScreen
 import navid.multiplash.kodein.viewmodel.rememberViewModel
 import navid.multiplash.shared.di.appModule
 import navid.multiplash.shared.navigation.NavigationItem
@@ -69,6 +78,7 @@ private fun MainContent(
     state: AppState,
     onNavigationItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController(),
 ) {
     val windowSizeClass = LocalWindowSizeClass.current
     val navigationType = remember(windowSizeClass) {
@@ -101,7 +111,23 @@ private fun MainContent(
                     onNavigationItemClick = onNavigationItemClick,
                 )
             }
-            HomeScreen(modifier = Modifier.padding(it))
+            NavHost(
+                navController = navController,
+                startDestination = "search",
+                enterTransition = { fadeIn(tween(250)) },
+                exitTransition = { fadeOut(tween(250)) },
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                composable("explore") {
+                    ExploreScreen()
+                }
+                composable("search") {
+                    SearchScreen()
+                }
+                composable("library") {
+                    LibraryScreen()
+                }
+            }
         }
     }
 
@@ -121,13 +147,7 @@ private fun AppNavigationBar(
                 NavigationBarItem(
                     selected = selected,
                     onClick = { onNavigationItemClick(item.route) },
-                    icon = {
-                        if (selected) {
-                            Icon(painterResource(item.selectedIcon), null)
-                        } else {
-                            Icon(painterResource(item.unselectedIcon), null)
-                        }
-                    },
+                    icon = { Icon(painterResource(if (selected) item.selectedIcon else item.unselectedIcon), null) },
                     label = { Text(text = stringResource(item.labelRes)) },
                 )
             }
@@ -142,21 +162,13 @@ private fun AppNavigationRail(
     onNavigationItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    NavigationRail(
-        modifier = modifier.fillMaxHeight(),
-    ) {
+    NavigationRail(modifier = modifier.fillMaxHeight()) {
         navigationDestinations.forEach { item ->
             val selected = item.route == selectedRoute
             NavigationRailItem(
                 selected = selected,
                 onClick = { onNavigationItemClick(item.route) },
-                icon = {
-                    if (selected) {
-                        Icon(painterResource(item.selectedIcon), null)
-                    } else {
-                        Icon(painterResource(item.unselectedIcon), null)
-                    }
-                },
+                icon = { Icon(painterResource(if (selected) item.selectedIcon else item.unselectedIcon), null) },
                 label = { Text(text = stringResource(item.labelRes)) },
             )
         }
@@ -183,13 +195,7 @@ private fun AppNavigationDrawer(
                 label = { Text(text = stringResource(item.labelRes)) },
                 selected = selected,
                 onClick = { onNavigationItemClick(item.route) },
-                icon = {
-                    if (selected) {
-                        Icon(painterResource(item.selectedIcon), null)
-                    } else {
-                        Icon(painterResource(item.unselectedIcon), null)
-                    }
-                },
+                icon = { Icon(painterResource(if (selected) item.selectedIcon else item.unselectedIcon), null) },
             )
         }
     }

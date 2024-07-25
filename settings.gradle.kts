@@ -24,7 +24,10 @@ include(
     ":core:ui",
     ":desktop-app",
     ":feature:details",
-    ":feature:home",
+    ":feature:explore",
+    ":feature:library",
+    ":feature:search",
     ":kodein-viewmodel",
     ":shared",
 )
+
