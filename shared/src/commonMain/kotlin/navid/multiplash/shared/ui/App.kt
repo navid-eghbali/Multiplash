@@ -1,8 +1,5 @@
 package navid.multiplash.shared.ui
 
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,19 +29,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import navid.multiplash.core.ui.AppTheme
 import navid.multiplash.core.ui.LocalWindowSizeClass
-import navid.multiplash.feature.explore.ui.ExploreScreen
-import navid.multiplash.feature.library.ui.LibraryScreen
-import navid.multiplash.feature.search.ui.SearchScreen
 import navid.multiplash.kodein.viewmodel.rememberViewModel
 import navid.multiplash.shared.di.appModule
 import navid.multiplash.shared.navigation.NavigationItem
 import navid.multiplash.shared.navigation.NavigationType
+import navid.multiplash.shared.navigation.navigateToRoute
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.kodein.di.compose.withDI
@@ -64,11 +60,7 @@ fun App(
         ) {
             val viewModel: AppViewModel by rememberViewModel()
             val state: AppState by viewModel.state.collectAsState()
-            MainContent(
-                state = state,
-                onNavigationItemClick = viewModel::onNavigationItemClicked,
-                modifier = modifier,
-            )
+            MainContent(state = state)
         }
     }
 }
@@ -76,7 +68,6 @@ fun App(
 @Composable
 private fun MainContent(
     state: AppState,
-    onNavigationItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
@@ -84,50 +75,41 @@ private fun MainContent(
     val navigationType = remember(windowSizeClass) {
         NavigationType.forWindowSizeClass(windowSizeClass)
     }
+    val showBottomBar =
+        navController.currentBackStackEntryAsState().value?.destination?.route in state.navigationDestinations.map { it.route }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
     Scaffold(
         bottomBar = {
-            if (navigationType == NavigationType.NAVIGATION_BAR) {
+            if (navigationType == NavigationType.NAVIGATION_BAR && showBottomBar) {
                 AppNavigationBar(
-                    selectedRoute = state.selectedRoute,
+                    navBackStackEntry = navBackStackEntry,
                     navigationDestinations = state.navigationDestinations,
-                    onNavigationItemClick = onNavigationItemClick,
+                    onNavigationItemClick = { navController.navigateToRoute(it) },
                 )
             }
         },
         containerColor = MaterialTheme.colorScheme.background,
         modifier = modifier.fillMaxSize(),
-    ) {
-        Row(modifier = Modifier.fillMaxSize()) {
+    ) { padding ->
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+        ) {
             if (navigationType == NavigationType.NAVIGATION_RAIL) {
                 AppNavigationRail(
-                    selectedRoute = state.selectedRoute,
+                    navBackStackEntry = navBackStackEntry,
                     navigationDestinations = state.navigationDestinations,
-                    onNavigationItemClick = onNavigationItemClick,
+                    onNavigationItemClick = { navController.navigateToRoute(it) },
                 )
             } else if (navigationType == NavigationType.NAVIGATION_DRAWER) {
                 AppNavigationDrawer(
-                    selectedRoute = state.selectedRoute,
+                    navBackStackEntry = navBackStackEntry,
                     navigationDestinations = state.navigationDestinations,
-                    onNavigationItemClick = onNavigationItemClick,
+                    onNavigationItemClick = { navController.navigateToRoute(it) },
                 )
             }
-            NavHost(
-                navController = navController,
-                startDestination = "search",
-                enterTransition = { fadeIn(tween(250)) },
-                exitTransition = { fadeOut(tween(250)) },
-                modifier = Modifier.fillMaxSize(),
-            ) {
-                composable("explore") {
-                    ExploreScreen()
-                }
-                composable("search") {
-                    SearchScreen()
-                }
-                composable("library") {
-                    LibraryScreen()
-                }
-            }
+            AppNavigation(navController)
         }
     }
 
@@ -135,15 +117,16 @@ private fun MainContent(
 
 @Composable
 private fun AppNavigationBar(
-    selectedRoute: String,
+    navBackStackEntry: NavBackStackEntry?,
     navigationDestinations: List<NavigationItem>,
     onNavigationItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
         NavigationBar {
+            val currentDestination = navBackStackEntry?.destination
             navigationDestinations.forEach { item ->
-                val selected = item.route == selectedRoute
+                val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
                 NavigationBarItem(
                     selected = selected,
                     onClick = { onNavigationItemClick(item.route) },
@@ -157,14 +140,15 @@ private fun AppNavigationBar(
 
 @Composable
 private fun AppNavigationRail(
-    selectedRoute: String,
+    navBackStackEntry: NavBackStackEntry?,
     navigationDestinations: List<NavigationItem>,
     onNavigationItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavigationRail(modifier = modifier.fillMaxHeight()) {
+        val currentDestination = navBackStackEntry?.destination
         navigationDestinations.forEach { item ->
-            val selected = item.route == selectedRoute
+            val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
             NavigationRailItem(
                 selected = selected,
                 onClick = { onNavigationItemClick(item.route) },
@@ -177,7 +161,7 @@ private fun AppNavigationRail(
 
 @Composable
 private fun AppNavigationDrawer(
-    selectedRoute: String,
+    navBackStackEntry: NavBackStackEntry?,
     navigationDestinations: List<NavigationItem>,
     onNavigationItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -189,8 +173,9 @@ private fun AppNavigationDrawer(
             .widthIn(max = 280.dp)
             .fillMaxHeight(),
     ) {
+        val currentDestination = navBackStackEntry?.destination
         navigationDestinations.forEach { item ->
-            val selected = item.route == selectedRoute
+            val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
             NavigationDrawerItem(
                 label = { Text(text = stringResource(item.labelRes)) },
                 selected = selected,
