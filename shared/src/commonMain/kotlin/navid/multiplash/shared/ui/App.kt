@@ -60,13 +60,16 @@ fun App(
         ) {
             val viewModel: AppViewModel by rememberViewModel()
             val state: AppState by viewModel.state.collectAsState()
-            MainContent(state = state)
+            AppContent(
+                state = state,
+                modifier = modifier,
+            )
         }
     }
 }
 
 @Composable
-private fun MainContent(
+private fun AppContent(
     state: AppState,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
