@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import app.cash.paging.cachedIn
 import navid.multiplash.feature.explore.usecase.GetPhotosUseCase
 
-class ExploreViewModel(
+internal class ExploreViewModel(
     getPhotosUseCase: GetPhotosUseCase,
 ) : ViewModel() {
 

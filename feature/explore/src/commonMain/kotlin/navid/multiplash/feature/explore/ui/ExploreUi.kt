@@ -29,7 +29,7 @@ import navid.multiplash.feature.explore.data.model.Photo
 import navid.multiplash.kodein.viewmodel.rememberViewModel
 
 @Composable
-fun ExploreUi(
+internal fun ExploreUi(
     onItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {

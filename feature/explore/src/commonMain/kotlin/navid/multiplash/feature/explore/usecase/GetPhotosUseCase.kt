@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import navid.multiplash.feature.explore.data.model.Photo
 import navid.multiplash.feature.explore.data.repository.ExploreRepository
 
-fun interface GetPhotosUseCase {
+internal fun interface GetPhotosUseCase {
 
     operator fun invoke(): Flow<PagingData<Photo>>
 }

@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
 @Composable
-fun SearchUi(
+internal fun SearchUi(
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.fillMaxSize().background(Color.Blue))

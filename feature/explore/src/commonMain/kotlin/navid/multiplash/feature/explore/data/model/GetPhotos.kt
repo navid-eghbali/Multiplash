@@ -4,7 +4,7 @@ import io.ktor.http.Parameters
 import io.ktor.http.parameters
 import kotlinx.serialization.Serializable
 
-object GetPhotos {
+internal object GetPhotos {
 
     data class Response(val photos: List<Photo>)
 
@@ -19,7 +19,7 @@ object GetPhotos {
 }
 
 @Serializable
-data class Photo(
+internal data class Photo(
     val id: String,
     val urls: Urls,
     val width: Int,
@@ -27,5 +27,5 @@ data class Photo(
 )
 
 @Serializable
-data class Urls(val regular: String)
+internal data class Urls(val regular: String)
 

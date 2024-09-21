@@ -14,21 +14,25 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import navid.multiplash.kodein.viewmodel.rememberViewModel
+import org.kodein.di.compose.subDI
 
 @Composable
-fun DetailsUi(
+internal fun DetailsUi(
     args: DetailsScreen,
     onNavigationIconClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    // val viewModel: DetailsViewModel by rememberViewModel(arg = args)
-    // val state by viewModel.state.collectAsStateWithLifecycle()
+    val viewModel: DetailsViewModel by rememberViewModel(arg = args)
+    val state by viewModel.state.collectAsStateWithLifecycle()
     DetailsUi(
-        url = args.url,
+        state = state,
         onNavigationIconClick = onNavigationIconClick,
         modifier = modifier,
     )
@@ -37,7 +41,7 @@ fun DetailsUi(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DetailsUi(
-    url: String,
+    state: DetailsState,
     onNavigationIconClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -61,7 +65,7 @@ private fun DetailsUi(
                 .padding(padding),
         ) {
             Text(
-                text = url,
+                text = state.url,
                 modifier = Modifier.padding(16.dp),
             )
         }

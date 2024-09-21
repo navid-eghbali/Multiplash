@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
 @Composable
-fun LibraryUi(
+internal fun LibraryUi(
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.fillMaxSize().background(Color.Red))

@@ -3,6 +3,6 @@ package navid.multiplash.feature.details.ui
 import androidx.compose.runtime.Immutable
 
 @Immutable
-data class DetailsState(
+internal data class DetailsState(
     val url: String,
 )

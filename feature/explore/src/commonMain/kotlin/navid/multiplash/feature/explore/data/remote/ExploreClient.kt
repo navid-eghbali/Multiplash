@@ -9,7 +9,7 @@ import navid.multiplash.core.api.converter.responseConverter
 import navid.multiplash.feature.explore.data.model.GetPhotos
 import navid.multiplash.feature.explore.data.model.Photo
 
-interface ExploreClient {
+internal interface ExploreClient {
 
     suspend fun getPhotos(
         page: Int,
