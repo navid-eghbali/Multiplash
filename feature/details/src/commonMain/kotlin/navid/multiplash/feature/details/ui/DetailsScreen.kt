@@ -1,11 +1,6 @@
 package navid.multiplash.feature.details.ui
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import kotlinx.serialization.Serializable
 
-@Composable
-fun DetailsScreen(
-    modifier: Modifier = Modifier,
-) {
-
-}
+@Serializable
+data class DetailsScreen(val url: String)

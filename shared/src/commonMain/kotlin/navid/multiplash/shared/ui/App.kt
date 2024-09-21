@@ -24,12 +24,13 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -59,7 +60,7 @@ fun App(
             dynamicColor = dynamicColor,
         ) {
             val viewModel: AppViewModel by rememberViewModel()
-            val state: AppState by viewModel.state.collectAsState()
+            val state: AppState by viewModel.state.collectAsStateWithLifecycle()
             AppContent(
                 state = state,
                 modifier = modifier,
@@ -78,14 +79,14 @@ private fun AppContent(
     val navigationType = remember(windowSizeClass) {
         NavigationType.forWindowSizeClass(windowSizeClass)
     }
-    val showBottomBar =
-        navController.currentBackStackEntryAsState().value?.destination?.route in state.navigationDestinations.map { it.route }
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val entry by navController.currentBackStackEntryAsState()
+    val currentDestination = entry?.destination
+    val showBottomBar = state.navigationDestinations.any { currentDestination?.hasRoute(it.route::class) == true }
     Scaffold(
         bottomBar = {
             if (navigationType == NavigationType.NAVIGATION_BAR && showBottomBar) {
                 AppNavigationBar(
-                    navBackStackEntry = navBackStackEntry,
+                    navBackStackEntry = entry,
                     navigationDestinations = state.navigationDestinations,
                     onNavigationItemClick = { navController.navigateToRoute(it) },
                 )
@@ -101,13 +102,13 @@ private fun AppContent(
         ) {
             if (navigationType == NavigationType.NAVIGATION_RAIL) {
                 AppNavigationRail(
-                    navBackStackEntry = navBackStackEntry,
+                    navBackStackEntry = entry,
                     navigationDestinations = state.navigationDestinations,
                     onNavigationItemClick = { navController.navigateToRoute(it) },
                 )
             } else if (navigationType == NavigationType.NAVIGATION_DRAWER) {
                 AppNavigationDrawer(
-                    navBackStackEntry = navBackStackEntry,
+                    navBackStackEntry = entry,
                     navigationDestinations = state.navigationDestinations,
                     onNavigationItemClick = { navController.navigateToRoute(it) },
                 )
@@ -115,25 +116,29 @@ private fun AppContent(
             AppNavigation(navController)
         }
     }
-
 }
 
 @Composable
 private fun AppNavigationBar(
     navBackStackEntry: NavBackStackEntry?,
     navigationDestinations: List<NavigationItem>,
-    onNavigationItemClick: (String) -> Unit,
+    onNavigationItemClick: (Any) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
         NavigationBar {
             val currentDestination = navBackStackEntry?.destination
             navigationDestinations.forEach { item ->
-                val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
+                val selected = currentDestination?.hierarchy?.any { it.hasRoute(item.route::class) } == true
                 NavigationBarItem(
                     selected = selected,
                     onClick = { onNavigationItemClick(item.route) },
-                    icon = { Icon(painterResource(if (selected) item.selectedIcon else item.unselectedIcon), null) },
+                    icon = {
+                        Icon(
+                            painter = painterResource(if (selected) item.selectedIcon else item.unselectedIcon),
+                            contentDescription = null
+                        )
+                    },
                     label = { Text(text = stringResource(item.labelRes)) },
                 )
             }
@@ -145,17 +150,22 @@ private fun AppNavigationBar(
 private fun AppNavigationRail(
     navBackStackEntry: NavBackStackEntry?,
     navigationDestinations: List<NavigationItem>,
-    onNavigationItemClick: (String) -> Unit,
+    onNavigationItemClick: (Any) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavigationRail(modifier = modifier.fillMaxHeight()) {
         val currentDestination = navBackStackEntry?.destination
         navigationDestinations.forEach { item ->
-            val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
+            val selected = currentDestination?.hierarchy?.any { it.hasRoute(item.route::class) } == true
             NavigationRailItem(
                 selected = selected,
                 onClick = { onNavigationItemClick(item.route) },
-                icon = { Icon(painterResource(if (selected) item.selectedIcon else item.unselectedIcon), null) },
+                icon = {
+                    Icon(
+                        painter = painterResource(if (selected) item.selectedIcon else item.unselectedIcon),
+                        contentDescription = null
+                    )
+                },
                 label = { Text(text = stringResource(item.labelRes)) },
             )
         }
@@ -166,7 +176,7 @@ private fun AppNavigationRail(
 private fun AppNavigationDrawer(
     navBackStackEntry: NavBackStackEntry?,
     navigationDestinations: List<NavigationItem>,
-    onNavigationItemClick: (String) -> Unit,
+    onNavigationItemClick: (Any) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -178,12 +188,17 @@ private fun AppNavigationDrawer(
     ) {
         val currentDestination = navBackStackEntry?.destination
         navigationDestinations.forEach { item ->
-            val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
+            val selected = currentDestination?.hierarchy?.any { it.hasRoute(item.route::class) } == true
             NavigationDrawerItem(
                 label = { Text(text = stringResource(item.labelRes)) },
                 selected = selected,
                 onClick = { onNavigationItemClick(item.route) },
-                icon = { Icon(painterResource(if (selected) item.selectedIcon else item.unselectedIcon), null) },
+                icon = {
+                    Icon(
+                        painter = painterResource(if (selected) item.selectedIcon else item.unselectedIcon),
+                        contentDescription = null
+                    )
+                },
             )
         }
     }

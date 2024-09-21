@@ -1,4 +1,4 @@
-package navid.multiplash.shared.ui
+package navid.multiplash.feature.details.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,14 +7,16 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 
-class AppViewModel : ViewModel() {
+internal class DetailsViewModel(
+    args: DetailsScreen,
+) : ViewModel() {
 
-    private val _state = MutableStateFlow(AppState())
+    private val _state = MutableStateFlow(DetailsState(args.url))
     val state = _state
         .onStart { }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = AppState()
+            initialValue = DetailsState(args.url)
         )
 }

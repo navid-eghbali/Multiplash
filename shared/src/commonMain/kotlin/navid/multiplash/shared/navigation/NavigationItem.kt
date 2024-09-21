@@ -11,15 +11,15 @@ import navid.multiplash.core.resources.ic_search_selected
 import navid.multiplash.core.resources.ic_search_unselected
 import navid.multiplash.core.resources.library
 import navid.multiplash.core.resources.search
-import navid.multiplash.feature.explore.navigation.ExploreRouter
-import navid.multiplash.feature.library.navigation.LibraryRouter
-import navid.multiplash.feature.search.navigation.SearchRouter
+import navid.multiplash.feature.explore.ui.ExploreScreen
+import navid.multiplash.feature.library.ui.LibraryScreen
+import navid.multiplash.feature.search.ui.SearchScreen
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 
 @Immutable
 data class NavigationItem(
-    val route: String,
+    val route: Any,
     val labelRes: StringResource,
     val selectedIcon: DrawableResource,
     val unselectedIcon: DrawableResource,
@@ -27,19 +27,19 @@ data class NavigationItem(
 
 fun getNavigationItems() = listOf(
     NavigationItem(
-        route = ExploreRouter.PATH,
+        route = ExploreScreen,
         labelRes = Res.string.explore,
         selectedIcon = Res.drawable.ic_explore_selected,
         unselectedIcon = Res.drawable.ic_explore_unselected,
     ),
     NavigationItem(
-        route = SearchRouter.PATH,
+        route = SearchScreen,
         labelRes = Res.string.search,
         selectedIcon = Res.drawable.ic_search_selected,
         unselectedIcon = Res.drawable.ic_search_unselected,
     ),
     NavigationItem(
-        route = LibraryRouter.PATH,
+        route = LibraryScreen,
         labelRes = Res.string.library,
         selectedIcon = Res.drawable.ic_library_selected,
         unselectedIcon = Res.drawable.ic_library_unselected,

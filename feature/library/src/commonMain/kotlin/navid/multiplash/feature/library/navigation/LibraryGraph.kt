@@ -3,13 +3,10 @@ package navid.multiplash.feature.library.navigation
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import navid.multiplash.feature.library.ui.LibraryScreen
+import navid.multiplash.feature.library.ui.LibraryUi
 
-fun NavGraphBuilder.libraryGraph() {
-    composable(
-        route = LibraryRouter.PATH,
-        arguments = LibraryRouter.arguments,
-        deepLinks = LibraryRouter.deepLinks,
-    ) {
-        LibraryScreen()
+fun NavGraphBuilder.libraryScreen() {
+    composable<LibraryScreen> {
+        LibraryUi()
     }
 }
