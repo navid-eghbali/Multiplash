@@ -5,6 +5,7 @@
     <application
         android:name=".MultiplashApplication"
         android:allowBackup="true"
+        android:enableOnBackInvokedCallback="true"
         android:label="Multiplash"
         android:supportsRtl="true"
         android:theme="@style/Theme.Multiplash">

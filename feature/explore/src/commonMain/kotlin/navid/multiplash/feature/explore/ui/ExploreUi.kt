@@ -88,7 +88,7 @@ private fun ExploreUi(
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .aspectRatio(1f)
-                            .clickable { onItemClick(it.urls.regular) },
+                            .clickable { onItemClick(it.urls.raw) },
                     )
                 }
             }

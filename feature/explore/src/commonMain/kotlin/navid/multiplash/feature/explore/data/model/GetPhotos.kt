@@ -27,5 +27,8 @@ internal data class Photo(
 )
 
 @Serializable
-internal data class Urls(val regular: String)
+internal data class Urls(
+    val regular: String,
+    val raw: String,
+)
 
