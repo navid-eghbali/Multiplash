@@ -19,6 +19,7 @@ include(
     ":android-app",
     ":core:api",
     ":core:async",
+    ":core:data",
     ":core:di",
     ":core:resources",
     ":core:ui",
@@ -27,7 +28,7 @@ include(
     ":feature:explore",
     ":feature:library",
     ":feature:search",
+    ":feature:topic",
     ":kodein-viewmodel",
     ":shared",
 )
-

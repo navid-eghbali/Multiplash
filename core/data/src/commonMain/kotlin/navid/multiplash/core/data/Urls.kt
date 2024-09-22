@@ -1,9 +1,9 @@
-package navid.multiplash.feature.search.data.model
+package navid.multiplash.core.data
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class Urls(
+data class Urls(
     val raw: String,
     val full: String,
     val regular: String,

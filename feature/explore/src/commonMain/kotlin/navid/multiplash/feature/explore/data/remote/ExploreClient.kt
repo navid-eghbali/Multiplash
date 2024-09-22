@@ -6,8 +6,8 @@ import io.ktor.http.encodedPath
 import io.ktor.http.takeFrom
 import navid.multiplash.core.api.config.BASE_URL
 import navid.multiplash.core.api.converter.responseConverter
+import navid.multiplash.core.data.Photo
 import navid.multiplash.feature.explore.data.model.GetPhotos
-import navid.multiplash.feature.explore.data.model.Photo
 
 internal interface ExploreClient {
 

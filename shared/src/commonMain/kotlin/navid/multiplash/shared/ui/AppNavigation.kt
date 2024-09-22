@@ -11,14 +11,16 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.navigation
-import navid.multiplash.feature.details.navigation.detailsScreen
 import navid.multiplash.feature.details.ui.DetailsScreen
-import navid.multiplash.feature.explore.navigation.exploreScreen
+import navid.multiplash.feature.details.ui.detailsScreen
 import navid.multiplash.feature.explore.ui.ExploreScreen
-import navid.multiplash.feature.library.navigation.libraryScreen
+import navid.multiplash.feature.explore.ui.exploreScreen
 import navid.multiplash.feature.library.ui.LibraryScreen
-import navid.multiplash.feature.search.navigation.searchScreen
+import navid.multiplash.feature.library.ui.libraryScreen
 import navid.multiplash.feature.search.ui.SearchScreen
+import navid.multiplash.feature.search.ui.searchScreen
+import navid.multiplash.feature.topic.ui.TopicScreen
+import navid.multiplash.feature.topic.ui.topicScreen
 import navid.multiplash.shared.navigation.ExploreGraph
 import navid.multiplash.shared.navigation.LibraryGraph
 import navid.multiplash.shared.navigation.SearchGraph
@@ -57,9 +59,13 @@ private fun NavGraphBuilder.exploreGraph(navController: NavHostController) {
 private fun NavGraphBuilder.searchGraph(navController: NavHostController) {
     navigation<SearchGraph>(startDestination = SearchScreen) {
         searchScreen(
-            onItemClick = { navController.navigate(DetailsScreen(url = it)) }
+            onPhotoClick = { navController.navigate(DetailsScreen(url = it)) },
+            onTopicClick = { navController.navigate(TopicScreen(id = it)) },
         )
         detailsScreen(
+            onNavigationIconClick = { navController.popBackStack() }
+        )
+        topicScreen(
             onNavigationIconClick = { navController.popBackStack() }
         )
     }

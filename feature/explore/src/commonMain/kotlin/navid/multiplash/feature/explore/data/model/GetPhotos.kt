@@ -2,7 +2,7 @@ package navid.multiplash.feature.explore.data.model
 
 import io.ktor.http.Parameters
 import io.ktor.http.parameters
-import kotlinx.serialization.Serializable
+import navid.multiplash.core.data.Photo
 
 internal object GetPhotos {
 
@@ -17,11 +17,3 @@ internal object GetPhotos {
         append("page", page.toString())
     }
 }
-
-@Serializable
-internal data class Photo(
-    val id: String,
-    val urls: Urls,
-    val width: Int,
-    val height: Int
-)

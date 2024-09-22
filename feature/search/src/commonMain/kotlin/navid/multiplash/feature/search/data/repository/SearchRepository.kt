@@ -4,7 +4,7 @@ import app.cash.paging.Pager
 import app.cash.paging.PagingConfig
 import app.cash.paging.PagingData
 import kotlinx.coroutines.flow.Flow
-import navid.multiplash.feature.search.data.model.Photo
+import navid.multiplash.core.data.Photo
 import navid.multiplash.feature.search.data.paging.SearchPagingSource
 import navid.multiplash.feature.search.data.remote.SearchClient
 

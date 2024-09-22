@@ -1,4 +1,4 @@
-package navid.multiplash.feature.details.ui
+package navid.multiplash.feature.topic.ui
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -6,13 +6,13 @@ import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DetailsScreen(val url: String)
+data class TopicScreen(val id: String)
 
-fun NavGraphBuilder.detailsScreen(
+fun NavGraphBuilder.topicScreen(
     onNavigationIconClick: () -> Unit,
 ) {
-    composable<DetailsScreen> {
-        DetailsUi(
+    composable<TopicScreen> {
+        TopicUi(
             args = it.toRoute(),
             onNavigationIconClick = onNavigationIconClick,
         )

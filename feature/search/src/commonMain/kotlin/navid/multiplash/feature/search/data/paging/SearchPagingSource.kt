@@ -4,7 +4,7 @@ import androidx.paging.PagingState
 import app.cash.paging.PagingSource
 import app.cash.paging.PagingSourceLoadResultError
 import app.cash.paging.PagingSourceLoadResultPage
-import navid.multiplash.feature.search.data.model.Photo
+import navid.multiplash.core.data.Photo
 import navid.multiplash.feature.search.data.remote.SearchClient
 
 internal class SearchPagingSource(

@@ -25,7 +25,7 @@ import app.cash.paging.LoadStateLoading
 import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImage
-import navid.multiplash.feature.explore.data.model.Photo
+import navid.multiplash.core.data.Photo
 import navid.multiplash.kodein.viewmodel.rememberViewModel
 
 @Composable

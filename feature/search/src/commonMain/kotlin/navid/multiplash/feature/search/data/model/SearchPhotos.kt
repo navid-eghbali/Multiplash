@@ -4,6 +4,7 @@ import io.ktor.http.Parameters
 import io.ktor.http.parameters
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import navid.multiplash.core.data.Photo
 
 internal object SearchPhotos {
 
@@ -27,11 +28,3 @@ internal object SearchPhotos {
         append("order_by", "relevant")
     }
 }
-
-@Serializable
-internal data class Photo(
-    val id: String,
-    val urls: Urls,
-    val width: Int,
-    val height: Int,
-)

@@ -29,6 +29,7 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core.api)
             implementation(projects.core.async)
+            implementation(projects.core.data)
             implementation(projects.core.di)
             implementation(projects.core.resources)
             implementation(projects.core.ui)
@@ -37,6 +38,7 @@ kotlin {
             implementation(projects.feature.explore)
             implementation(projects.feature.library)
             implementation(projects.feature.search)
+            implementation(projects.feature.topic)
 
             implementation(libs.kotlinx.serialization.json)
 

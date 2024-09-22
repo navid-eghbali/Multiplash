@@ -6,9 +6,9 @@ import io.ktor.http.encodedPath
 import io.ktor.http.takeFrom
 import navid.multiplash.core.api.config.BASE_URL
 import navid.multiplash.core.api.converter.responseConverter
+import navid.multiplash.core.data.Topic
 import navid.multiplash.feature.search.data.model.GetTopics
 import navid.multiplash.feature.search.data.model.SearchPhotos
-import navid.multiplash.feature.search.data.model.Topic
 
 internal interface SearchClient {
 

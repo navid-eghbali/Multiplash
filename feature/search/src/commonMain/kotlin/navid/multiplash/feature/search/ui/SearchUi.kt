@@ -44,16 +44,17 @@ import app.cash.paging.LoadStateLoading
 import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImage
+import navid.multiplash.core.data.Photo
 import navid.multiplash.core.resources.Res
 import navid.multiplash.core.resources.ic_chevron_right
-import navid.multiplash.feature.search.data.model.Photo
 import navid.multiplash.feature.search.usecase.GetTopicsUseCase
 import navid.multiplash.kodein.viewmodel.rememberViewModel
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 internal fun SearchUi(
-    onItemClick: (String) -> Unit,
+    onPhotoClick: (String) -> Unit,
+    onTopicClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: SearchViewModel by rememberViewModel()
@@ -64,7 +65,8 @@ internal fun SearchUi(
         state = state,
         pagedItems = pagedPhotos,
         onQueryChange = viewModel::onQueryChange,
-        onItemClick = onItemClick,
+        onPhotoClick = onPhotoClick,
+        onTopicClick = onTopicClick,
         modifier = modifier,
     )
 }
@@ -74,7 +76,8 @@ private fun SearchUi(
     state: SearchState,
     pagedItems: LazyPagingItems<Photo>,
     onQueryChange: (String) -> Unit,
-    onItemClick: (String) -> Unit,
+    onPhotoClick: (String) -> Unit,
+    onTopicClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -113,7 +116,7 @@ private fun SearchUi(
                 contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp),
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                items(state.topics) { TopicItem(topic = it, onTopicClick = {}) }
+                items(state.topics) { TopicItem(topic = it, onTopicClick = onTopicClick) }
             }
         } else {
             Box(modifier = modifier.fillMaxSize()) {
@@ -136,14 +139,14 @@ private fun SearchUi(
                         item(span = { GridItemSpan(maxLineSpan) }) {
                             TopicSuggestionsItem(
                                 topics = state.topics,
-                                onTopicClick = {},
+                                onTopicClick = onTopicClick,
                             )
                         }
                         items(count = pagedItems.itemCount) { index ->
                             pagedItems[index]?.let {
                                 PhotoItem(
                                     photo = it,
-                                    onItemClick = onItemClick,
+                                    onItemClick = onPhotoClick,
                                 )
                             }
                         }

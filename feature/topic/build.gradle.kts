@@ -19,25 +19,21 @@ kotlin {
             implementation(projects.core.data)
             implementation(projects.core.di)
             implementation(projects.core.ui)
-            implementation(projects.core.resources)
             implementation(projects.kodeinViewmodel)
 
             implementation(libs.coil.core)
             implementation(libs.coil.compose)
             implementation(libs.coil.network)
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.paging.common)
-            implementation(libs.paging.compose)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.ui)
-            implementation(compose.components.resources)
         }
     }
 }
 
 android {
-    namespace = "navid.multiplash.feature.search"
+    namespace = "navid.multiplash.feature.topic"
 }

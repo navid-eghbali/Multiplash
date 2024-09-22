@@ -2,7 +2,7 @@ package navid.multiplash.feature.search.usecase
 
 import app.cash.paging.PagingData
 import kotlinx.coroutines.flow.Flow
-import navid.multiplash.feature.search.data.model.Photo
+import navid.multiplash.core.data.Photo
 import navid.multiplash.feature.search.data.repository.SearchRepository
 
 internal fun interface SearchPhotosUseCase {

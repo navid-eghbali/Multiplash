@@ -62,7 +62,8 @@ fun App(
         ) {
             val viewModel: AppViewModel by rememberViewModel()
             val state: AppState by viewModel.state.collectAsStateWithLifecycle()
-            AppContent(
+
+            AppUi(
                 state = state,
                 modifier = modifier,
             )
@@ -71,7 +72,7 @@ fun App(
 }
 
 @Composable
-private fun AppContent(
+private fun AppUi(
     state: AppState,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
