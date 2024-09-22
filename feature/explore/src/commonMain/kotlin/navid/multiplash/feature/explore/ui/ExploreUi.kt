@@ -51,68 +51,100 @@ private fun ExploreUi(
     Box(modifier = modifier.fillMaxSize()) {
         when (val refreshLoadState = pagedItems.loadState.refresh) {
             is LoadStateLoading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            is LoadStateError -> ReloadItem(
+                errorMessage = refreshLoadState.error.message,
+                onReload = { pagedItems.refresh() },
+                modifier = Modifier.align(Alignment.Center),
+            )
 
-            is LoadStateError -> Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
+            else -> LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                verticalArrangement = Arrangement.spacedBy(1.dp),
+                horizontalArrangement = Arrangement.spacedBy(1.dp),
                 modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(horizontal = 16.dp),
+                    .align(Alignment.TopCenter)
+                    .fillMaxSize(),
             ) {
-                Text(
-                    text = "Error: ${refreshLoadState.error.message}",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentSize(Alignment.Center),
-                )
-                Button(onClick = { pagedItems.refresh() }) {
-                    Text(text = "Reload")
+                items(count = pagedItems.itemCount) { index ->
+                    pagedItems[index]?.let {
+                        PhotoItem(
+                            photo = it,
+                            onItemClick = onItemClick,
+                        )
+                    }
+                }
+
+                when (pagedItems.loadState.append) {
+                    is LoadStateLoading -> item(span = { GridItemSpan(maxLineSpan) }) { LoadingItem() }
+                    is LoadStateError -> item(span = { GridItemSpan(maxLineSpan) }) { RetryItem(onRetry = { pagedItems.retry() }) }
+                    else -> Unit
                 }
             }
-
-            else -> Unit
         }
+    }
+}
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            verticalArrangement = Arrangement.spacedBy(1.dp),
-            horizontalArrangement = Arrangement.spacedBy(1.dp),
+@Composable
+private fun PhotoItem(
+    photo: Photo,
+    onItemClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    AsyncImage(
+        model = photo.urls.small,
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        modifier = modifier
+            .aspectRatio(1F)
+            .clickable { onItemClick(photo.urls.full) },
+    )
+}
+
+@Composable
+private fun LoadingItem(
+    modifier: Modifier = Modifier,
+) {
+    Box(modifier = modifier.fillMaxSize()) {
+        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+    }
+}
+
+@Composable
+private fun ReloadItem(
+    errorMessage: String?,
+    onReload: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.padding(16.dp),
+    ) {
+        Text(
+            text = "Error: $errorMessage",
             modifier = Modifier
-                .align(Alignment.TopCenter)
-                .fillMaxSize(),
+                .fillMaxWidth()
+                .wrapContentSize(Alignment.Center),
+        )
+        Button(onClick = onReload) { Text(text = "Reload") }
+    }
+}
+
+@Composable
+private fun RetryItem(
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Button(
+            onClick = onRetry,
+            modifier = Modifier.align(Alignment.Center),
         ) {
-            items(count = pagedItems.itemCount) { index ->
-                pagedItems[index]?.let {
-                    AsyncImage(
-                        model = it.urls.regular,
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .aspectRatio(1f)
-                            .clickable { onItemClick(it.urls.raw) },
-                    )
-                }
-            }
-
-            when (pagedItems.loadState.append) {
-                is LoadStateLoading -> item(span = { GridItemSpan(maxLineSpan) }) {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                    }
-                }
-
-                is LoadStateError -> item(span = { GridItemSpan(maxLineSpan) }) {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        Button(
-                            onClick = { pagedItems.retry() },
-                            modifier = Modifier.align(Alignment.Center),
-                        ) {
-                            Text(text = "Retry")
-                        }
-                    }
-                }
-
-                else -> Unit
-            }
+            Text(text = "Retry")
         }
     }
 }

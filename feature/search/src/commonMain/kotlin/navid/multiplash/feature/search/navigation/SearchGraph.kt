@@ -5,8 +5,12 @@ import androidx.navigation.compose.composable
 import navid.multiplash.feature.search.ui.SearchScreen
 import navid.multiplash.feature.search.ui.SearchUi
 
-fun NavGraphBuilder.searchScreen() {
+fun NavGraphBuilder.searchScreen(
+    onItemClick: (String) -> Unit,
+) {
     composable<SearchScreen> {
-        SearchUi()
+        SearchUi(
+            onItemClick = onItemClick,
+        )
     }
 }

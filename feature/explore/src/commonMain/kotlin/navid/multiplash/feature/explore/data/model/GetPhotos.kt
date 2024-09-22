@@ -25,10 +25,3 @@ internal data class Photo(
     val width: Int,
     val height: Int
 )
-
-@Serializable
-internal data class Urls(
-    val regular: String,
-    val raw: String,
-)
-

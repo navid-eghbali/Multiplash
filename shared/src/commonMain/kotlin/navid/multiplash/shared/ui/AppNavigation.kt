@@ -37,15 +37,13 @@ fun AppNavigation(
             modifier = Modifier.fillMaxSize(),
         ) {
             exploreGraph(navController)
-            searchGraph()
+            searchGraph(navController)
             libraryGraph()
         }
     }
 }
 
-private fun NavGraphBuilder.exploreGraph(
-    navController: NavHostController,
-) {
+private fun NavGraphBuilder.exploreGraph(navController: NavHostController) {
     navigation<ExploreGraph>(startDestination = ExploreScreen) {
         exploreScreen(
             onItemClick = { navController.navigate(DetailsScreen(url = it)) }
@@ -56,9 +54,14 @@ private fun NavGraphBuilder.exploreGraph(
     }
 }
 
-private fun NavGraphBuilder.searchGraph() {
+private fun NavGraphBuilder.searchGraph(navController: NavHostController) {
     navigation<SearchGraph>(startDestination = SearchScreen) {
-        searchScreen()
+        searchScreen(
+            onItemClick = { navController.navigate(DetailsScreen(url = it)) }
+        )
+        detailsScreen(
+            onNavigationIconClick = { navController.popBackStack() }
+        )
     }
 }
 

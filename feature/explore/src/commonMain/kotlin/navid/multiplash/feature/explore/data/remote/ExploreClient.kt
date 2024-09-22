@@ -24,17 +24,16 @@ internal class ExploreClientImpl(
     override suspend fun getPhotos(
         page: Int,
         pageSize: Int,
-    ): Result<GetPhotos.Response> =
-        responseConverter<List<Photo>> {
-            httpClient.get {
-                url {
-                    takeFrom(BASE_URL)
-                    encodedPath = GetPhotos.getPath()
-                    parameters.appendAll(GetPhotos.getQueryParameters(page, pageSize))
-                }
+    ): Result<GetPhotos.Response> = responseConverter<List<Photo>>(
+        httpClient.get {
+            url {
+                takeFrom(BASE_URL)
+                encodedPath = GetPhotos.getPath()
+                parameters.appendAll(GetPhotos.getQueryParameters(page, pageSize))
             }
-        }.fold(
-            onSuccess = { Result.success(GetPhotos.Response(photos = it)) },
-            onFailure = { Result.failure(it) },
-        )
+        }
+    ).fold(
+        onSuccess = { Result.success(GetPhotos.Response(photos = it)) },
+        onFailure = { Result.failure(it) },
+    )
 }
