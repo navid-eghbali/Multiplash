@@ -11,15 +11,15 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.navigation
-import navid.multiplash.feature.details.ui.DetailsScreen
 import navid.multiplash.feature.details.ui.detailsScreen
+import navid.multiplash.feature.details.ui.navigateToDetailsScreen
 import navid.multiplash.feature.explore.ui.ExploreScreen
 import navid.multiplash.feature.explore.ui.exploreScreen
 import navid.multiplash.feature.library.ui.LibraryScreen
 import navid.multiplash.feature.library.ui.libraryScreen
 import navid.multiplash.feature.search.ui.SearchScreen
 import navid.multiplash.feature.search.ui.searchScreen
-import navid.multiplash.feature.topic.ui.TopicScreen
+import navid.multiplash.feature.topic.ui.navigateToTopicScreen
 import navid.multiplash.feature.topic.ui.topicScreen
 import navid.multiplash.shared.navigation.ExploreGraph
 import navid.multiplash.shared.navigation.LibraryGraph
@@ -48,10 +48,10 @@ fun AppNavigation(
 private fun NavGraphBuilder.exploreGraph(navController: NavHostController) {
     navigation<ExploreGraph>(startDestination = ExploreScreen) {
         exploreScreen(
-            onItemClick = { navController.navigate(DetailsScreen(url = it)) }
+            onItemClick = navController::navigateToDetailsScreen,
         )
         detailsScreen(
-            onNavigationIconClick = { navController.popBackStack() }
+            onNavigationIconClick = navController::popBackStack,
         )
     }
 }
@@ -59,14 +59,16 @@ private fun NavGraphBuilder.exploreGraph(navController: NavHostController) {
 private fun NavGraphBuilder.searchGraph(navController: NavHostController) {
     navigation<SearchGraph>(startDestination = SearchScreen) {
         searchScreen(
-            onPhotoClick = { navController.navigate(DetailsScreen(url = it)) },
-            onTopicClick = { navController.navigate(TopicScreen(id = it)) },
+            onPhotoClick = navController::navigateToDetailsScreen,
+            onTopicClick = navController::navigateToTopicScreen,
         )
         detailsScreen(
-            onNavigationIconClick = { navController.popBackStack() }
+            onNavigationIconClick = navController::popBackStack,
         )
         topicScreen(
-            onNavigationIconClick = { navController.popBackStack() }
+            onNavigationIconClick = navController::popBackStack,
+            onUserClick = {},
+            onPhotoClick = navController::navigateToDetailsScreen,
         )
     }
 }

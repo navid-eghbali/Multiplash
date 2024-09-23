@@ -1,5 +1,6 @@
 package navid.multiplash.feature.details.ui
 
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
@@ -17,4 +18,8 @@ fun NavGraphBuilder.detailsScreen(
             onNavigationIconClick = onNavigationIconClick,
         )
     }
+}
+
+fun NavController.navigateToDetailsScreen(photoUrl: String) {
+    navigate(DetailsScreen(url = photoUrl))
 }

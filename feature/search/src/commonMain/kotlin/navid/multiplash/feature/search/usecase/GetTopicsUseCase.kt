@@ -1,5 +1,7 @@
 package navid.multiplash.feature.search.usecase
 
+import navid.multiplash.common.ext.fromHexColorToLong
+import navid.multiplash.common.ext.withDecimalSeparator
 import navid.multiplash.feature.search.data.remote.SearchClient
 
 internal fun interface GetTopicsUseCase {
@@ -10,7 +12,7 @@ internal fun interface GetTopicsUseCase {
         val id: String,
         val title: String,
         val totalPhotos: String,
-        val color: Long,
+        val color: Long?,
         val coverUrl: String,
     )
 }
@@ -27,7 +29,7 @@ internal class GetTopicsUseCaseImpl(
                         id = it.id,
                         title = it.title,
                         totalPhotos = "${it.totalPhotos.withDecimalSeparator()} photos",
-                        color = "ff${it.coverPhoto.color.removePrefix("#").lowercase()}".toLong(16),
+                        color = it.coverPhoto.color?.fromHexColorToLong(),
                         coverUrl = it.coverPhoto.urls.small,
                     )
                 }
@@ -35,11 +37,4 @@ internal class GetTopicsUseCaseImpl(
         },
         onFailure = { Result.failure(it) },
     )
-
-    private fun Int.withDecimalSeparator(): String = this
-        .toString()
-        .reversed()
-        .chunked(3)
-        .joinToString(",")
-        .reversed()
 }

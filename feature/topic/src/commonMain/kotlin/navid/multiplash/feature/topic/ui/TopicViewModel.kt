@@ -2,15 +2,18 @@ package navid.multiplash.feature.topic.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import navid.multiplash.feature.topic.usecase.GetTopicPhotosUseCase
 import navid.multiplash.feature.topic.usecase.GetTopicUseCase
 
 internal class TopicViewModel(
+    getTopicPhotosUseCase: GetTopicPhotosUseCase,
     private val args: TopicScreen,
     private val getTopicUseCase: GetTopicUseCase,
 ) : ViewModel() {
@@ -23,6 +26,8 @@ internal class TopicViewModel(
             started = SharingStarted.WhileSubscribed(5000L),
             initialValue = TopicState.Empty,
         )
+    val pagedPhotos = getTopicPhotosUseCase(args.id)
+        .cachedIn(viewModelScope)
 
     fun onReload() {
         fetchTopic(topicId = args.id)

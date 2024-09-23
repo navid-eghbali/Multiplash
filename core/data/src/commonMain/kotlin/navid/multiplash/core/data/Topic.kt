@@ -12,4 +12,5 @@ data class Topic(
     val owners: List<User>,
     @SerialName("top_contributors") val topContributors: List<User>? = null,
     @SerialName("cover_photo") val coverPhoto: Photo,
+    @SerialName("preview_photos") val previewPhotos: List<Photo>,
 )

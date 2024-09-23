@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class Photo(
     val id: String,
     val urls: Urls,
-    val color: String,
+    val color: String? = null,
 )

@@ -17,6 +17,7 @@ dependencyResolutionManagement {
 rootProject.name = "Multiplash"
 include(
     ":android-app",
+    ":common",
     ":core:api",
     ":core:async",
     ":core:data",

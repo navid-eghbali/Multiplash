@@ -15,6 +15,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(projects.common)
             implementation(projects.core.api)
             implementation(projects.core.data)
             implementation(projects.core.di)
@@ -25,6 +26,8 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.network)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.paging.common)
+            implementation(libs.paging.compose)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
