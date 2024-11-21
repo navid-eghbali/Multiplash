@@ -4,13 +4,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -57,9 +59,9 @@ private fun ExploreUi(
                 modifier = Modifier.align(Alignment.Center),
             )
 
-            else -> LazyVerticalStaggeredGrid(
-                columns = StaggeredGridCells.Fixed(2),
-                verticalItemSpacing = 1.dp,
+            else -> LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                verticalArrangement = Arrangement.spacedBy(1.dp),
                 horizontalArrangement = Arrangement.spacedBy(1.dp),
                 modifier = Modifier
                     .align(Alignment.TopCenter)
@@ -75,8 +77,8 @@ private fun ExploreUi(
                 }
 
                 when (pagedItems.loadState.append) {
-                    is LoadStateLoading -> item(span = StaggeredGridItemSpan.FullLine) { LoadingItem() }
-                    is LoadStateError -> item(span = StaggeredGridItemSpan.FullLine) { RetryItem(onRetry = { pagedItems.retry() }) }
+                    is LoadStateLoading -> item(span = { GridItemSpan(maxLineSpan) }) { LoadingItem() }
+                    is LoadStateError -> item(span = { GridItemSpan(maxLineSpan) }) { RetryItem(onRetry = { pagedItems.retry() }) }
                     else -> Unit
                 }
             }
@@ -95,7 +97,7 @@ private fun PhotoItem(
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = modifier
-            .fillMaxSize()
+            .aspectRatio(1f)
             .clickable { onItemClick(photo.urls.full) },
     )
 }
@@ -106,8 +108,8 @@ private fun LoadingItem(
 ) {
     Box(
         modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
+            .fillMaxWidth()
+            .height(64.dp),
     ) {
         CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
     }

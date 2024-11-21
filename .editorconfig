@@ -1,0 +1,7 @@
+# EditorConfig is awesome: https://editorconfig.org
+
+# top-most EditorConfig file
+root = true
+
+[*.{kt,kts}]
+max_line_length = 150

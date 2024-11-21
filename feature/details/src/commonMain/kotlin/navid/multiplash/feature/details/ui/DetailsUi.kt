@@ -3,6 +3,7 @@ package navid.multiplash.feature.details.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -90,27 +91,29 @@ private fun DetailsUi(
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
         }
-        AsyncImage(
-            model = state.url,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            onLoading = { onImageLoading() },
-            onSuccess = { onImageComplete() },
-            modifier = Modifier
-                .fillMaxSize()
-                .pointerInput(Unit) {
-                    detectTransformGestures { _, pan, zoom, _ ->
-                        scale *= zoom
-                        scale = scale.coerceIn(0.5F, 2F)
-                        offset = if (scale == 1F) Offset(0F, 0F) else offset + pan
+        BoxWithConstraints {
+            AsyncImage(
+                model = state.url,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                onLoading = { onImageLoading() },
+                onSuccess = { onImageComplete() },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .pointerInput(Unit) {
+                        detectTransformGestures { _, pan, zoom, _ ->
+                            scale *= zoom
+                            scale = scale.coerceIn(0.5F, 2F)
+                            offset = if (scale == 1F) Offset(0F, 0F) else offset + pan
+                        }
                     }
-                }
-                .graphicsLayer(
-                    scaleX = scale,
-                    scaleY = scale,
-                    translationX = offset.x,
-                    translationY = offset.y,
-                ),
-        )
+                    .graphicsLayer(
+                        scaleX = scale,
+                        scaleY = scale,
+                        translationX = offset.x,
+                        translationY = offset.y,
+                    ),
+            )
+        }
     }
 }

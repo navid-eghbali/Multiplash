@@ -1,17 +1,17 @@
 [versions]
-agp = "8.4.2"
+agp = "8.7.2"
 android-compile-sdk = "35"
 android-min-sdk = "24"
 android-target-sdk = "35"
-androidx-activity-compose = "1.9.2"
-build-konfig-plugin = "0.15.1"
-coil = "3.0.0-alpha07"
-compose-plugin = "1.7.0-beta02"
-coroutines = "1.8.1"
+androidx-activity-compose = "1.9.3"
+build-konfig-plugin = "0.15.2"
+coil = "3.0.0-rc02"
+compose-plugin = "1.7.1"
+coroutines = "1.9.0"
 kodein = "7.22.0"
-kotlin = "2.0.0"
-kotlinx-serialization = "1.7.1"
-ktor = "2.3.12"
+kotlin = "2.0.21"
+kotlinx-serialization = "1.7.3"
+ktor = "3.0.1"
 paging = "3.3.0-alpha02-0.5.1"
 
 [plugins]
@@ -27,15 +27,15 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
-androidx-lifecycle-viewmodel-compose = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2"
-androidx-navigation-compose = "org.jetbrains.androidx.navigation:navigation-compose:2.8.0-alpha09"
+androidx-lifecycle-viewmodel-compose = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3"
+androidx-navigation-compose = "org.jetbrains.androidx.navigation:navigation-compose:2.8.0-alpha10"
 androidx-material3-windowsizeclass = { module = "org.jetbrains.compose.material3:material3-window-size-class", version.ref = "compose-plugin" }
 
 chrisbanes-material3-windowsizeclass = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.5.0"
 
 coil-core = { module = "io.coil-kt.coil3:coil-core", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
-coil-network = { module = "io.coil-kt.coil3:coil-network-ktor", version.ref = "coil" }
+coil-network = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 
 kodein-di = { module = "org.kodein.di:kodein-di", version.ref = "kodein" }
 kodein-di-conf = { module = "org.kodein.di:kodein-di-conf", version.ref = "kodein" }

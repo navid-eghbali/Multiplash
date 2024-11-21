@@ -18,13 +18,13 @@ internal class TopicViewModel(
     private val getTopicUseCase: GetTopicUseCase,
 ) : ViewModel() {
 
-    private val _state: MutableStateFlow<TopicState> = MutableStateFlow(TopicState.Empty)
+    private val _state: MutableStateFlow<TopicState> = MutableStateFlow(TopicState())
     val state = _state
         .onStart { fetchTopic(topicId = args.id) }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = TopicState.Empty,
+            initialValue = TopicState(),
         )
     val pagedPhotos = getTopicPhotosUseCase(args.id)
         .cachedIn(viewModelScope)
@@ -35,14 +35,14 @@ internal class TopicViewModel(
 
     private fun fetchTopic(topicId: String) {
         viewModelScope.launch {
-            _state.update { TopicState.Loading }
+            _state.update { it.copy(isLoading = true) }
             getTopicUseCase(topicId).fold(
                 onSuccess = { topic ->
-                    _state.update { TopicState.Success(topic) }
+                    _state.update { it.copy(isLoading = false, topic = topic) }
                 },
                 onFailure = { throwable ->
                     println(throwable.printStackTrace())
-                    _state.update { TopicState.Failure(throwable.message) }
+                    _state.update { it.copy(isLoading = false, errorMessage = throwable.message) }
                 },
             )
         }

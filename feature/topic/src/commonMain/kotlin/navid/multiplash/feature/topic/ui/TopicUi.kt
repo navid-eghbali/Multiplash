@@ -17,10 +17,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -40,9 +41,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -55,6 +58,7 @@ import coil3.compose.AsyncImage
 import navid.multiplash.core.data.Photo
 import navid.multiplash.feature.topic.usecase.GetTopicUseCase
 import navid.multiplash.kodein.viewmodel.rememberViewModel
+import kotlin.math.min
 
 @Composable
 internal fun TopicUi(
@@ -90,35 +94,37 @@ private fun TopicUi(
     onPhotoClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val gridState = rememberLazyGridState()
+    val containerColor = state.topic?.color?.let { Color(it) } ?: MaterialTheme.colorScheme.background
+    val contentColor = if (containerColor.luminance() > 0.5F) {
+        MaterialTheme.colorScheme.background
+    } else {
+        MaterialTheme.colorScheme.onBackground
+    }
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {},
+                title = { Text(text = state.topic?.title.orEmpty()) },
                 navigationIcon = {
-                    IconButton(
-                        onClick = onNavigationIconClick,
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .background(Color.Black.copy(alpha = 0.33F)),
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                            contentDescription = null,
-                            tint = Color.White
-                        )
+                    IconButton(onClick = onNavigationIconClick) {
+                        Icon(imageVector = Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors().copy(containerColor = Color.Transparent)
+                colors = TopAppBarDefaults.topAppBarColors().copy(
+                    containerColor = containerColor,
+                    navigationIconContentColor = contentColor,
+                    titleContentColor = contentColor,
+                ),
+                modifier = Modifier.alpha(min(1, gridState.firstVisibleItemIndex).toFloat()),
             )
         },
         containerColor = MaterialTheme.colorScheme.background,
         modifier = modifier.fillMaxSize(),
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            when (state) {
-                is TopicState.Empty -> Unit
-                is TopicState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                is TopicState.Failure -> Column(
+            when {
+                state.isLoading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                state.errorMessage != null -> Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
@@ -126,7 +132,7 @@ private fun TopicUi(
                         .padding(16.dp),
                 ) {
                     Text(
-                        text = "Error: ${state.message.orEmpty()}",
+                        text = "Error: ${state.errorMessage}",
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentSize(Alignment.Center),
@@ -134,9 +140,10 @@ private fun TopicUi(
                     Button(onClick = onReload) { Text(text = "Reload") }
                 }
 
-                is TopicState.Success -> LazyVerticalStaggeredGrid(
-                    columns = StaggeredGridCells.Fixed(2),
-                    verticalItemSpacing = 1.dp,
+                state.topic != null -> LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    state = gridState,
+                    verticalArrangement = Arrangement.spacedBy(1.dp),
                     horizontalArrangement = Arrangement.spacedBy(1.dp),
                     modifier = Modifier
                         .fillMaxSize()
@@ -149,10 +156,10 @@ private fun TopicUi(
                             )
                         ),
                 ) {
-                    item(span = StaggeredGridItemSpan.FullLine) { TopicHeaderItem(topic = state.topic) }
-                    item(span = StaggeredGridItemSpan.FullLine) { TopicDescriptionItem(topic = state.topic) }
+                    item(span = { GridItemSpan(maxLineSpan) }) { TopicHeaderItem(topic = state.topic) }
+                    item(span = { GridItemSpan(maxLineSpan) }) { TopicDescriptionItem(topic = state.topic) }
                     if (state.topic.topContributors.isNotEmpty()) {
-                        item(span = StaggeredGridItemSpan.FullLine) {
+                        item(span = { GridItemSpan(maxLineSpan) }) {
                             TopicTopContributorsItem(topic = state.topic, onUserClick = onUserClick)
                         }
                     }
@@ -164,6 +171,21 @@ private fun TopicUi(
                         }
                     }
                 }
+            }
+            IconButton(
+                onClick = onNavigationIconClick,
+                modifier = Modifier
+                    .padding(horizontal = 4.dp, vertical = 8.dp)
+                    .alpha(1F - min(1, gridState.firstVisibleItemIndex))
+                    .clip(CircleShape)
+                    .background(Color.Black.copy(alpha = 0.33F))
+                    .align(Alignment.TopStart),
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                    contentDescription = null,
+                    tint = Color.White,
+                )
             }
         }
     }
@@ -231,11 +253,16 @@ private fun TopicHeaderItem(
             }
         }
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .padding(16.dp),
         ) {
+            Text(
+                text = topic.owners,
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.bodyMedium
+            )
             Text(
                 text = topic.title,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -243,7 +270,7 @@ private fun TopicHeaderItem(
                 style = MaterialTheme.typography.headlineLarge,
             )
             Text(
-                text = "${topic.owners} · ${topic.totalPhotos}",
+                text = topic.totalPhotos,
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.bodyMedium
             )
@@ -321,7 +348,7 @@ private fun PhotoItem(
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = modifier
-            .fillMaxSize()
+            .aspectRatio(1f)
             .clickable { onPhotoClick(photo.urls.full) },
     )
 }
