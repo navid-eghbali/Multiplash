@@ -9,7 +9,7 @@ plugins {
 kotlin {
     applyDefaultHierarchyTemplate()
     androidTarget()
-    jvm("desktop")
+    jvm()
     listOf(
         iosArm64(),
         iosSimulatorArm64()

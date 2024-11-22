@@ -1,12 +1,10 @@
 plugins {
-    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.multiplatform)
 }
 
 kotlin {
     applyDefaultHierarchyTemplate()
-    androidTarget()
-    jvm("desktop")
+    jvm()
     iosArm64()
     iosSimulatorArm64()
 
@@ -17,8 +15,4 @@ kotlin {
             api(libs.kodein.di.framework.compose)
         }
     }
-}
-
-android {
-    namespace = "navid.multiplash.core.di"
 }

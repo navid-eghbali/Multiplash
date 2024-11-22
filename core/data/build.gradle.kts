@@ -5,7 +5,7 @@ plugins {
 
 kotlin {
     applyDefaultHierarchyTemplate()
-    jvm("desktop")
+    jvm()
     iosArm64()
     iosSimulatorArm64()
 

@@ -1,5 +1,4 @@
 plugins {
-    alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.multiplatform)
@@ -7,8 +6,7 @@ plugins {
 
 kotlin {
     applyDefaultHierarchyTemplate()
-    androidTarget()
-    jvm("desktop")
+    jvm()
     iosArm64()
     iosSimulatorArm64()
 
@@ -26,8 +24,4 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
         }
     }
-}
-
-android {
-    namespace = "navid.multiplash.kodein.viewmodel"
 }
