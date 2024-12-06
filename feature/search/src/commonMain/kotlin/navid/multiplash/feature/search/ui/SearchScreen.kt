@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 object SearchScreen
 
 fun NavGraphBuilder.searchScreen(
-    onPhotoClick: (String) -> Unit,
+    onPhotoClick: (String, String) -> Unit,
     onTopicClick: (String) -> Unit,
 ) {
     composable<SearchScreen> {

@@ -12,7 +12,7 @@ data class TopicScreen(val id: String)
 fun NavGraphBuilder.topicScreen(
     onNavigationIconClick: () -> Unit,
     onUserClick: (String) -> Unit,
-    onPhotoClick: (String) -> Unit,
+    onPhotoClick: (String, String) -> Unit,
 ) {
     composable<TopicScreen> {
         TopicUi(

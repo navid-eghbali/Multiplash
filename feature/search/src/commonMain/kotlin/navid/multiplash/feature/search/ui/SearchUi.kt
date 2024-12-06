@@ -53,7 +53,7 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 internal fun SearchUi(
-    onPhotoClick: (String) -> Unit,
+    onPhotoClick: (String, String) -> Unit,
     onTopicClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -76,7 +76,7 @@ private fun SearchUi(
     state: SearchState,
     pagedItems: LazyPagingItems<Photo>,
     onQueryChange: (String) -> Unit,
-    onPhotoClick: (String) -> Unit,
+    onPhotoClick: (String, String) -> Unit,
     onTopicClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -236,7 +236,7 @@ private fun TopicSuggestionsItem(
 @Composable
 private fun PhotoItem(
     photo: Photo,
-    onItemClick: (String) -> Unit,
+    onItemClick: (String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     AsyncImage(
@@ -245,7 +245,7 @@ private fun PhotoItem(
         contentScale = ContentScale.Crop,
         modifier = modifier
             .aspectRatio(1F)
-            .clickable { onItemClick(photo.urls.full) },
+            .clickable { onItemClick(photo.id, photo.urls.full) },
     )
 }
 

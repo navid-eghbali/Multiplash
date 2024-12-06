@@ -36,16 +36,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -65,7 +65,7 @@ internal fun TopicUi(
     args: TopicScreen,
     onNavigationIconClick: () -> Unit,
     onUserClick: (String) -> Unit,
-    onPhotoClick: (String) -> Unit,
+    onPhotoClick: (String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: TopicViewModel by rememberViewModel(arg = args)
@@ -91,32 +91,23 @@ private fun TopicUi(
     onNavigationIconClick: () -> Unit,
     onReload: () -> Unit,
     onUserClick: (String) -> Unit,
-    onPhotoClick: (String) -> Unit,
+    onPhotoClick: (String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val gridState = rememberLazyGridState()
-    val containerColor = state.topic?.color?.let { Color(it) } ?: MaterialTheme.colorScheme.background
-    val contentColor = if (containerColor.luminance() > 0.5F) {
-        MaterialTheme.colorScheme.background
-    } else {
-        MaterialTheme.colorScheme.onBackground
-    }
+    val firstItemVisible by remember { derivedStateOf { gridState.firstVisibleItemIndex == 0 } }
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = state.topic?.title.orEmpty()) },
-                navigationIcon = {
-                    IconButton(onClick = onNavigationIconClick) {
-                        Icon(imageVector = Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors().copy(
-                    containerColor = containerColor,
-                    navigationIconContentColor = contentColor,
-                    titleContentColor = contentColor,
-                ),
-                modifier = Modifier.alpha(min(1, gridState.firstVisibleItemIndex).toFloat()),
-            )
+            if (!firstItemVisible) {
+                TopAppBar(
+                    title = { Text(text = state.topic?.title.orEmpty()) },
+                    navigationIcon = {
+                        IconButton(onClick = onNavigationIconClick) {
+                            Icon(imageVector = Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
+                        }
+                    },
+                )
+            }
         },
         containerColor = MaterialTheme.colorScheme.background,
         modifier = modifier.fillMaxSize(),
@@ -145,16 +136,7 @@ private fun TopicUi(
                     state = gridState,
                     verticalArrangement = Arrangement.spacedBy(1.dp),
                     horizontalArrangement = Arrangement.spacedBy(1.dp),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(
-                            Brush.verticalGradient(
-                                buildList {
-                                    state.topic.color?.let { add(Color(it)) }
-                                    add(MaterialTheme.colorScheme.background)
-                                }
-                            )
-                        ),
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     item(span = { GridItemSpan(maxLineSpan) }) { TopicHeaderItem(topic = state.topic) }
                     item(span = { GridItemSpan(maxLineSpan) }) { TopicDescriptionItem(topic = state.topic) }
@@ -199,7 +181,7 @@ private fun TopicHeaderItem(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .aspectRatio(1.77F),
+            .aspectRatio(1.77F), // 16:9
     ) {
         val pagerState = rememberPagerState { topic.previewPhotos.size }
 
@@ -212,7 +194,7 @@ private fun TopicHeaderItem(
                 model = topic.previewPhotos[page].urls.regular,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
         Box(
@@ -340,7 +322,7 @@ private fun TopicTopContributorsItem(
 @Composable
 private fun PhotoItem(
     photo: Photo,
-    onPhotoClick: (String) -> Unit,
+    onPhotoClick: (String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     AsyncImage(
@@ -349,6 +331,6 @@ private fun PhotoItem(
         contentScale = ContentScale.Crop,
         modifier = modifier
             .aspectRatio(1f)
-            .clickable { onPhotoClick(photo.urls.full) },
+            .clickable { onPhotoClick(photo.id, photo.urls.full) },
     )
 }

@@ -7,25 +7,44 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import navid.multiplash.feature.details.usecase.GetPhotoUseCase
 
 internal class DetailsViewModel(
     args: DetailsScreen,
+    private val getPhotoUseCase: GetPhotoUseCase,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(DetailsState(url = args.url))
+    private val _state = MutableStateFlow(DetailsState(url = args.photoUrl))
     val state = _state
-        .onStart { }
+        .onStart { fetchPhoto(args.photoId) }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = DetailsState(url = args.url)
+            initialValue = DetailsState(url = args.photoUrl)
         )
 
     fun onImageLoading() {
-        _state.update { it.copy(isLoading = true) }
+        // _state.update { it.copy(isLoading = true) }
     }
 
     fun onImageComplete() {
-        _state.update { it.copy(isLoading = false) }
+        // _state.update { it.copy(isLoading = false) }
+    }
+
+    private fun fetchPhoto(photoId: String) {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            getPhotoUseCase(photoId).fold(
+                onSuccess = { photo ->
+                    println(photo)
+                    _state.update { it.copy(isLoading = false, photo = photo) }
+                },
+                onFailure = { throwable ->
+                    println(throwable.printStackTrace())
+                    _state.update { it.copy(isLoading = false) }
+                },
+            )
+        }
     }
 }

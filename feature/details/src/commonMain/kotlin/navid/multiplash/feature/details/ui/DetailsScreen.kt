@@ -7,7 +7,10 @@ import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DetailsScreen(val url: String)
+data class DetailsScreen(
+    val photoId: String,
+    val photoUrl: String,
+)
 
 fun NavGraphBuilder.detailsScreen(
     onNavigationIconClick: () -> Unit,
@@ -20,6 +23,6 @@ fun NavGraphBuilder.detailsScreen(
     }
 }
 
-fun NavController.navigateToDetailsScreen(photoUrl: String) {
-    navigate(DetailsScreen(url = photoUrl))
+fun NavController.navigateToDetailsScreen(photoId: String, photoUrl: String) {
+    navigate(DetailsScreen(photoId = photoId, photoUrl = photoUrl))
 }

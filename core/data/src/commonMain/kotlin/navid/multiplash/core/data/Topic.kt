@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class Topic(
     val id: String,
     val title: String,
-    val description: String,
+    val description: String?,
     @SerialName("total_photos") val totalPhotos: Int,
     val owners: List<User>,
     @SerialName("top_contributors") val topContributors: List<User>? = null,

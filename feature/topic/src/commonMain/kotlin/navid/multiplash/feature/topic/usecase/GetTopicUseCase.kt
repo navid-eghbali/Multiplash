@@ -33,7 +33,7 @@ internal class GetTopicUseCaseImpl(
                     GetTopicUseCase.Topic(
                         id = id,
                         title = title,
-                        description = description,
+                        description = description.orEmpty(),
                         totalPhotos = "${totalPhotos.withDecimalSeparator()} photos",
                         owners = owners.joinToString { it.name },
                         topContributors = topContributors ?: emptyList(),

@@ -31,7 +31,7 @@ import navid.multiplash.kodein.viewmodel.rememberViewModel
 
 @Composable
 internal fun ExploreUi(
-    onItemClick: (String) -> Unit,
+    onItemClick: (String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: ExploreViewModel by rememberViewModel()
@@ -47,7 +47,7 @@ internal fun ExploreUi(
 @Composable
 private fun ExploreUi(
     pagedItems: LazyPagingItems<Photo>,
-    onItemClick: (String) -> Unit,
+    onItemClick: (String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.fillMaxSize()) {
@@ -89,7 +89,7 @@ private fun ExploreUi(
 @Composable
 private fun PhotoItem(
     photo: Photo,
-    onItemClick: (String) -> Unit,
+    onItemClick: (String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     AsyncImage(
@@ -98,7 +98,7 @@ private fun PhotoItem(
         contentScale = ContentScale.Crop,
         modifier = modifier
             .aspectRatio(1f)
-            .clickable { onItemClick(photo.urls.full) },
+            .clickable { onItemClick(photo.id, photo.urls.full) },
     )
 }
 
