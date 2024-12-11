@@ -5,8 +5,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import navid.multiplash.common.ext.fromHexColorToLong
 import navid.multiplash.common.ext.withDecimalSeparator
-import navid.multiplash.core.data.Exif
-import navid.multiplash.core.data.Tag
 import navid.multiplash.core.data.User
 import navid.multiplash.feature.details.data.remote.DetailsClient
 
@@ -21,9 +19,12 @@ internal fun interface GetPhotoUseCase {
         val downloads: String,
         val likes: String,
         val publishedDate: String,
+        val description: String?,
         val user: User,
-        val exif: Exif?,
-        val tags: List<Tag>,
+        val userTotalPhotos: String,
+        val device: String?,
+        val location: String?,
+        val tags: List<String>,
         val featured: String,
     )
 }
@@ -41,12 +42,15 @@ internal class GetPhotoUseCaseImpl(
                     views = response.views.withDecimalSeparator(),
                     downloads = response.downloads.withDecimalSeparator(),
                     likes = response.likes.withDecimalSeparator(),
-                    publishedDate = Instant.parse(response.createdAt).toLocalDateTime(TimeZone.currentSystemDefault()).let {
-                        "Published on ${it.month.name} ${it.dayOfMonth}, ${it.year}"
+                    publishedDate = Instant.parse(response.createdAt).toLocalDateTime(TimeZone.currentSystemDefault()).let { date ->
+                        "Published on ${date.month.name.lowercase().replaceFirstChar { it.titlecase() }} ${date.dayOfMonth}, ${date.year}"
                     },
+                    description = response.description,
                     user = response.user,
-                    exif = response.exif,
-                    tags = response.tags,
+                    userTotalPhotos = "${response.user.totalPhotos.withDecimalSeparator()} photos",
+                    device = response.exif?.name,
+                    location = response.location.name,
+                    tags = response.tags.map { it.title },
                     featured = response.topics.joinToString(),
                 )
             )

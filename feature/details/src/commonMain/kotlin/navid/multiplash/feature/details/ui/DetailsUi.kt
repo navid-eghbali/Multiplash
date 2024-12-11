@@ -3,32 +3,14 @@ package navid.multiplash.feature.details.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTransformGestures
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.KeyboardArrowDown
-import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material.icons.rounded.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,13 +30,20 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.launch
+import navid.multiplash.core.resources.Res
+import navid.multiplash.core.resources.ic_camera
+import navid.multiplash.core.resources.ic_date
+import navid.multiplash.core.resources.ic_location
 import navid.multiplash.feature.details.usecase.GetPhotoUseCase
 import navid.multiplash.kodein.viewmodel.rememberViewModel
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 internal fun DetailsUi(
     args: DetailsScreen,
     onNavigationIconClick: () -> Unit,
+    onLocationClick: (String) -> Unit,
+    onTagClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: DetailsViewModel by rememberViewModel(arg = args)
@@ -63,6 +52,8 @@ internal fun DetailsUi(
     DetailsUi(
         state = state,
         onNavigationIconClick = onNavigationIconClick,
+        onLocationClick = onLocationClick,
+        onTagClick = onTagClick,
         onImageLoading = viewModel::onImageLoading,
         onImageComplete = viewModel::onImageComplete,
         modifier = modifier,
@@ -74,6 +65,8 @@ internal fun DetailsUi(
 private fun DetailsUi(
     state: DetailsState,
     onNavigationIconClick: () -> Unit,
+    onLocationClick: (String) -> Unit,
+    onTagClick: (String) -> Unit,
     onImageLoading: () -> Unit,
     onImageComplete: () -> Unit,
     modifier: Modifier = Modifier,
@@ -155,59 +148,55 @@ private fun DetailsUi(
                     onDismissRequest = { showBottomSheet = false },
                     sheetState = sheetState,
                 ) {
-                    Box(
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .align(Alignment.CenterHorizontally),
+                            .padding(bottom = 16.dp),
                     ) {
-                        Text(
-                            text = "Details",
-                            fontWeight = FontWeight.Bold,
-                            style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier.align(Alignment.Center),
-                        )
-                        IconButton(
-                            onClick = {
+                        HeaderItem(
+                            onHideClick = {
                                 scope.launch { sheetState.hide() }.invokeOnCompletion {
                                     if (!sheetState.isVisible) showBottomSheet = false
                                 }
                             },
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.KeyboardArrowDown,
-                                contentDescription = null,
-                            )
-                        }
-                    }
-                    state.photo?.let { photo ->
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp)
-                                .align(Alignment.CenterHorizontally),
-                        ) {
-                            AsyncImage(
-                                model = photo.user.profileImage.large,
-                                contentDescription = null,
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier
-                                    .width(64.dp)
-                                    .height(64.dp)
-                                    .clip(CircleShape)
-                                    .clickable { },
-                            )
-                            Text(text = photo.user.name, style = MaterialTheme.typography.bodyMedium)
-                        }
-                        StatisticsItem(
-                            photo = photo,
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
                         )
+                        state.photo?.let { photo ->
+                            StatisticsItem(photo = photo)
+                            photo.description?.let { DescriptionItem(description = it) }
+                            photo.location?.let { LocationItem(location = it, onLocationClick = onLocationClick) }
+                            DateItem(date = photo.publishedDate)
+                            photo.device?.let { DeviceItem(device = it) }
+                            TagsItem(tags = photo.tags, onTagClick = onTagClick)
+                            ProfileItem(photo = photo)
+                        }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun HeaderItem(
+    onHideClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(modifier = modifier.fillMaxWidth()) {
+        Text(
+            text = "Details",
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.align(Alignment.Center),
+        )
+        IconButton(onClick = onHideClick) {
+            Icon(
+                imageVector = Icons.Rounded.KeyboardArrowDown,
+                contentDescription = null,
+            )
+        }
+        HorizontalDivider(modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter))
     }
 }
 
@@ -219,7 +208,9 @@ private fun StatisticsItem(
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .padding(vertical = 8.dp)
+            .fillMaxWidth(),
     ) {
         if (photo.views != "0") {
             Column(
@@ -227,8 +218,8 @@ private fun StatisticsItem(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth().weight(1f),
             ) {
-                Text(text = "Views", style = MaterialTheme.typography.labelSmall)
                 Text(text = photo.views, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleLarge)
+                Text(text = "Views", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelSmall)
             }
         }
         if (photo.likes != "0") {
@@ -237,8 +228,8 @@ private fun StatisticsItem(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth().weight(1f),
             ) {
-                Text(text = "Likes", style = MaterialTheme.typography.labelSmall)
                 Text(text = photo.likes, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleLarge)
+                Text(text = "Likes", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelSmall)
             }
         }
         if (photo.downloads != "0") {
@@ -247,9 +238,136 @@ private fun StatisticsItem(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth().weight(1f),
             ) {
-                Text(text = "Downloads", style = MaterialTheme.typography.labelSmall)
                 Text(text = photo.downloads, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleLarge)
+                Text(text = "Downloads", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelSmall)
             }
+        }
+    }
+}
+
+@Composable
+private fun DescriptionItem(
+    description: String,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = description,
+        style = MaterialTheme.typography.bodySmall,
+        modifier = modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .background(color = MaterialTheme.colorScheme.surfaceContainerHighest, shape = MaterialTheme.shapes.medium)
+            .fillMaxWidth()
+            .padding(8.dp),
+    )
+}
+
+@Composable
+private fun LocationItem(
+    location: String,
+    onLocationClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .clickable { onLocationClick(location) }
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .fillMaxWidth(),
+    ) {
+        Icon(painter = painterResource(Res.drawable.ic_location), contentDescription = "Location")
+        Text(text = location, style = MaterialTheme.typography.bodyMedium)
+    }
+}
+
+@Composable
+private fun DateItem(
+    date: String,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .fillMaxWidth(),
+    ) {
+        Icon(painter = painterResource(Res.drawable.ic_date), contentDescription = "Published Date")
+        Text(text = date, style = MaterialTheme.typography.bodyMedium)
+    }
+}
+
+@Composable
+private fun DeviceItem(
+    device: String,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .fillMaxWidth(),
+    ) {
+        Icon(painter = painterResource(Res.drawable.ic_camera), contentDescription = "EXIF")
+        Text(text = device, style = MaterialTheme.typography.bodyMedium)
+    }
+}
+
+@Composable
+private fun TagsItem(
+    tags: List<String>,
+    onTagClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LazyRow(
+        contentPadding = PaddingValues(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        items(tags) { tag ->
+            InputChip(
+                selected = false,
+                onClick = { onTagClick(tag) },
+                label = { Text(text = tag, style = MaterialTheme.typography.labelSmall) },
+                shape = MaterialTheme.shapes.large,
+                colors = InputChipDefaults.inputChipColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest),
+                border = null,
+            )
+        }
+    }
+}
+
+@Composable
+private fun ProfileItem(
+    photo: GetPhotoUseCase.Photo,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .padding(start = 16.dp, top = 8.dp, end = 16.dp)
+            .fillMaxWidth(),
+    ) {
+        AsyncImage(
+            model = photo.user.profileImage.large,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .width(48.dp)
+                .height(48.dp)
+                .clip(CircleShape)
+                .clickable { },
+        )
+        Column(horizontalAlignment = Alignment.Start) {
+            Text(text = photo.user.name, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
+            Text(
+                text = photo.userTotalPhotos,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
     }
 }

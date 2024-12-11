@@ -52,6 +52,8 @@ private fun NavGraphBuilder.exploreGraph(navController: NavHostController) {
         )
         detailsScreen(
             onNavigationIconClick = navController::popBackStack,
+            onLocationClick = {},
+            onTagClick = {},
         )
     }
 }
@@ -64,6 +66,8 @@ private fun NavGraphBuilder.searchGraph(navController: NavHostController) {
         )
         detailsScreen(
             onNavigationIconClick = navController::popBackStack,
+            onLocationClick = {},
+            onTagClick = {},
         )
         topicScreen(
             onNavigationIconClick = navController::popBackStack,

@@ -20,7 +20,6 @@ kotlin {
             implementation(projects.core.data)
             implementation(projects.core.di)
             implementation(projects.core.ui)
-            implementation(projects.core.resources)
             implementation(projects.kodeinViewmodel)
 
             implementation(libs.coil.core)

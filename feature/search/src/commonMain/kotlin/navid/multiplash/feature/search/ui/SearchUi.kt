@@ -1,16 +1,7 @@
 package navid.multiplash.feature.search.ui
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -19,17 +10,10 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SuggestionChip
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -45,11 +29,8 @@ import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImage
 import navid.multiplash.core.data.Photo
-import navid.multiplash.core.resources.Res
-import navid.multiplash.core.resources.ic_chevron_right
 import navid.multiplash.feature.search.usecase.GetTopicsUseCase
 import navid.multiplash.kodein.viewmodel.rememberViewModel
-import org.jetbrains.compose.resources.painterResource
 
 @Composable
 internal fun SearchUi(
@@ -100,7 +81,7 @@ private fun SearchUi(
                 }
             },
             singleLine = true,
-            shape = RoundedCornerShape(percent = 50),
+            shape = RoundedCornerShape(50),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
@@ -205,7 +186,7 @@ private fun TopicItem(
                     text = topic.totalPhotos,
                     style = MaterialTheme.typography.labelMedium,
                 )
-                Icon(painter = painterResource(Res.drawable.ic_chevron_right), null)
+                Icon(imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight, null)
             }
         }
     }
@@ -227,7 +208,7 @@ private fun TopicSuggestionsItem(
             SuggestionChip(
                 onClick = { onTopicClick(topic.id) },
                 label = { Text(text = topic.title) },
-                shape = RoundedCornerShape(50),
+                shape = MaterialTheme.shapes.large,
             )
         }
     }

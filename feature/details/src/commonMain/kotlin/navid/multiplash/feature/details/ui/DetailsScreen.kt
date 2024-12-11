@@ -14,11 +14,15 @@ data class DetailsScreen(
 
 fun NavGraphBuilder.detailsScreen(
     onNavigationIconClick: () -> Unit,
+    onLocationClick: (String) -> Unit,
+    onTagClick: (String) -> Unit,
 ) {
     composable<DetailsScreen> {
         DetailsUi(
             args = it.toRoute(),
             onNavigationIconClick = onNavigationIconClick,
+            onLocationClick = onLocationClick,
+            onTagClick = onTagClick,
         )
     }
 }

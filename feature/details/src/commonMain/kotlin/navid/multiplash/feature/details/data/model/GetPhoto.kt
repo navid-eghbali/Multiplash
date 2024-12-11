@@ -2,8 +2,6 @@ package navid.multiplash.feature.details.data.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import navid.multiplash.core.data.Exif
-import navid.multiplash.core.data.Tag
 import navid.multiplash.core.data.User
 
 internal object GetPhoto {
@@ -16,11 +14,29 @@ internal object GetPhoto {
         val downloads: Int,
         val likes: Int,
         @SerialName("created_at") val createdAt: String,
+        val description: String?,
         val user: User,
         val exif: Exif?,
+        val location: Location,
         val tags: List<Tag>,
         val topics: List<Topic>,
     ) {
+
+        @Serializable
+        data class Exif(
+            val name: String?,
+        )
+
+        @Serializable
+        data class Location(
+            val name: String?,
+        )
+
+        @Serializable
+        data class Tag(
+            val type: String,
+            val title: String,
+        )
 
         @Serializable
         data class Topic(
