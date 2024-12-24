@@ -5,6 +5,7 @@ import navid.multiplash.core.async.di.coreAsyncModule
 import navid.multiplash.feature.details.di.detailsModule
 import navid.multiplash.feature.explore.di.exploreModule
 import navid.multiplash.feature.library.di.libraryModule
+import navid.multiplash.feature.photos.di.photosModule
 import navid.multiplash.feature.search.di.searchModule
 import navid.multiplash.feature.topic.di.topicModule
 import navid.multiplash.shared.ui.AppViewModel
@@ -17,6 +18,7 @@ val appModule: ConfigurableDI = ConfigurableDI().addConfig {
     import(detailsModule)
     import(exploreModule)
     import(libraryModule)
+    import(photosModule)
     import(searchModule)
     import(topicModule)
 

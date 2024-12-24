@@ -28,6 +28,7 @@ include(
     ":feature:details",
     ":feature:explore",
     ":feature:library",
+    ":feature:photos",
     ":feature:search",
     ":feature:topic",
     ":kodein-viewmodel",

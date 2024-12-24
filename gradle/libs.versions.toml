@@ -1,5 +1,5 @@
 [versions]
-agp = "8.7.2"
+agp = "8.7.3"
 android-compile-sdk = "35"
 android-min-sdk = "24"
 android-target-sdk = "35"

@@ -1,4 +1,4 @@
-package navid.multiplash.feature.explore.ui
+package navid.multiplash.feature.photos.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,9 +13,17 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,56 +38,82 @@ import navid.multiplash.core.data.Photo
 import navid.multiplash.kodein.viewmodel.rememberViewModel
 
 @Composable
-internal fun ExploreUi(
+internal fun PhotosUi(
+    args: PhotosScreen,
+    onNavigationIconClick: () -> Unit,
     onPhotoClick: (String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: ExploreViewModel by rememberViewModel()
+    val viewModel: PhotosViewModel by rememberViewModel(arg = args)
     val pagedPhotos = viewModel.pagedPhotos.collectAsLazyPagingItems()
 
-    ExploreUi(
+    PhotosUi(
+        title = args.query,
         pagedItems = pagedPhotos,
+        onNavigationIconClick = onNavigationIconClick,
         onPhotoClick = onPhotoClick,
         modifier = modifier,
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ExploreUi(
+private fun PhotosUi(
+    title: String,
     pagedItems: LazyPagingItems<Photo>,
+    onNavigationIconClick: () -> Unit,
     onPhotoClick: (String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier = modifier.fillMaxSize()) {
-        when (val refreshLoadState = pagedItems.loadState.refresh) {
-            is LoadStateLoading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            is LoadStateError -> ReloadItem(
-                errorMessage = refreshLoadState.error.message,
-                onReload = { pagedItems.refresh() },
-                modifier = Modifier.align(Alignment.Center),
-            )
-
-            else -> LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                verticalArrangement = Arrangement.spacedBy(1.dp),
-                horizontalArrangement = Arrangement.spacedBy(1.dp),
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .fillMaxSize(),
-            ) {
-                items(count = pagedItems.itemCount) { index ->
-                    pagedItems[index]?.let {
-                        PhotoItem(
-                            photo = it,
-                            onPhotoClick = onPhotoClick,
-                        )
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = title, maxLines = 1) },
+                navigationIcon = {
+                    IconButton(onClick = onNavigationIconClick) {
+                        Icon(imageVector = Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
                     }
-                }
+                },
+            )
+        },
+        containerColor = MaterialTheme.colorScheme.background,
+        modifier = modifier.fillMaxSize(),
+    ) { padding ->
+        Box(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize(),
+        ) {
+            when (val refreshLoadState = pagedItems.loadState.refresh) {
+                is LoadStateLoading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                is LoadStateError -> ReloadItem(
+                    errorMessage = refreshLoadState.error.message,
+                    onReload = { pagedItems.refresh() },
+                    modifier = Modifier.align(Alignment.Center),
+                )
 
-                when (pagedItems.loadState.append) {
-                    is LoadStateLoading -> item(span = { GridItemSpan(maxLineSpan) }) { LoadingItem() }
-                    is LoadStateError -> item(span = { GridItemSpan(maxLineSpan) }) { RetryItem(onRetry = { pagedItems.retry() }) }
-                    else -> Unit
+                else -> LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    verticalArrangement = Arrangement.spacedBy(1.dp),
+                    horizontalArrangement = Arrangement.spacedBy(1.dp),
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .fillMaxSize(),
+                ) {
+                    items(count = pagedItems.itemCount) { index ->
+                        pagedItems[index]?.let {
+                            PhotoItem(
+                                photo = it,
+                                onPhotoClick = onPhotoClick,
+                            )
+                        }
+                    }
+
+                    when (pagedItems.loadState.append) {
+                        is LoadStateLoading -> item(span = { GridItemSpan(maxLineSpan) }) { LoadingItem() }
+                        is LoadStateError -> item(span = { GridItemSpan(maxLineSpan) }) { RetryItem(onRetry = { pagedItems.retry() }) }
+                        else -> Unit
+                    }
                 }
             }
         }

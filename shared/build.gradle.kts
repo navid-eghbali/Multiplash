@@ -37,6 +37,7 @@ kotlin {
             implementation(projects.feature.details)
             implementation(projects.feature.explore)
             implementation(projects.feature.library)
+            implementation(projects.feature.photos)
             implementation(projects.feature.search)
             implementation(projects.feature.topic)
 

@@ -25,24 +25,22 @@ internal class DetailsViewModel(
         )
 
     fun onImageLoading() {
-        // _state.update { it.copy(isLoading = true) }
+        _state.update { it.copy(isLoading = true) }
     }
 
     fun onImageComplete() {
-        // _state.update { it.copy(isLoading = false) }
+        _state.update { it.copy(isLoading = false) }
     }
 
     private fun fetchPhoto(photoId: String) {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
             getPhotoUseCase(photoId).fold(
                 onSuccess = { photo ->
                     println(photo)
-                    _state.update { it.copy(isLoading = false, photo = photo) }
+                    _state.update { it.copy(photo = photo) }
                 },
                 onFailure = { throwable ->
                     println(throwable.printStackTrace())
-                    _state.update { it.copy(isLoading = false) }
                 },
             )
         }

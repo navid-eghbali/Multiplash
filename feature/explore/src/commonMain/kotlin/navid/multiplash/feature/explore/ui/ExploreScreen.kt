@@ -8,11 +8,11 @@ import kotlinx.serialization.Serializable
 object ExploreScreen
 
 fun NavGraphBuilder.exploreScreen(
-    onItemClick: (String, String) -> Unit,
+    onPhotoClick: (String, String) -> Unit,
 ) {
     composable<ExploreScreen> {
         ExploreUi(
-            onItemClick = onItemClick,
+            onPhotoClick = onPhotoClick,
         )
     }
 }

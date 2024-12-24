@@ -17,6 +17,8 @@ import navid.multiplash.feature.explore.ui.ExploreScreen
 import navid.multiplash.feature.explore.ui.exploreScreen
 import navid.multiplash.feature.library.ui.LibraryScreen
 import navid.multiplash.feature.library.ui.libraryScreen
+import navid.multiplash.feature.photos.ui.navigateToPhotosScreen
+import navid.multiplash.feature.photos.ui.photosScreen
 import navid.multiplash.feature.search.ui.SearchScreen
 import navid.multiplash.feature.search.ui.searchScreen
 import navid.multiplash.feature.topic.ui.navigateToTopicScreen
@@ -48,12 +50,16 @@ fun AppNavigation(
 private fun NavGraphBuilder.exploreGraph(navController: NavHostController) {
     navigation<ExploreGraph>(startDestination = ExploreScreen) {
         exploreScreen(
-            onItemClick = navController::navigateToDetailsScreen,
+            onPhotoClick = navController::navigateToDetailsScreen,
         )
         detailsScreen(
             onNavigationIconClick = navController::popBackStack,
-            onLocationClick = {},
-            onTagClick = {},
+            onLocationClick = navController::navigateToPhotosScreen,
+            onTagClick = navController::navigateToPhotosScreen,
+        )
+        photosScreen(
+            onNavigationIconClick = navController::popBackStack,
+            onPhotoClick = navController::navigateToDetailsScreen,
         )
     }
 }
@@ -66,12 +72,16 @@ private fun NavGraphBuilder.searchGraph(navController: NavHostController) {
         )
         detailsScreen(
             onNavigationIconClick = navController::popBackStack,
-            onLocationClick = {},
-            onTagClick = {},
+            onLocationClick = navController::navigateToPhotosScreen,
+            onTagClick = navController::navigateToPhotosScreen,
         )
         topicScreen(
             onNavigationIconClick = navController::popBackStack,
             onUserClick = {},
+            onPhotoClick = navController::navigateToDetailsScreen,
+        )
+        photosScreen(
+            onNavigationIconClick = navController::popBackStack,
             onPhotoClick = navController::navigateToDetailsScreen,
         )
     }
