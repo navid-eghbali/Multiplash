@@ -3,13 +3,13 @@ package navid.multiplash.feature.photos.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import navid.multiplash.feature.photos.usecase.GetPhotosUseCase
+import navid.multiplash.feature.search.api.usecase.SearchPhotosUseCase
 
 internal class PhotosViewModel(
     args: PhotosScreen,
-    getPhotosUseCase: GetPhotosUseCase,
+    searchPhotosUseCase: SearchPhotosUseCase,
 ) : ViewModel() {
 
-    val pagedPhotos = getPhotosUseCase(query = args.query)
+    val pagedPhotos = searchPhotosUseCase(query = args.query)
         .cachedIn(viewModelScope)
 }

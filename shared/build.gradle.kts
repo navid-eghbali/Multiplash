@@ -38,7 +38,7 @@ kotlin {
             implementation(projects.feature.explore)
             implementation(projects.feature.library)
             implementation(projects.feature.photos)
-            implementation(projects.feature.search)
+            implementation(projects.feature.search.implementation)
             implementation(projects.feature.topic)
 
             implementation(libs.kotlinx.serialization.json)

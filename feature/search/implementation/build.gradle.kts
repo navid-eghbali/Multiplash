@@ -17,10 +17,11 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.common)
             implementation(projects.core.api)
-            implementation(projects.core.data)
             implementation(projects.core.di)
             implementation(projects.core.ui)
             implementation(projects.kodeinViewmodel)
+
+            implementation(projects.feature.search.api)
 
             implementation(libs.coil.core)
             implementation(libs.coil.compose)
@@ -39,5 +40,5 @@ kotlin {
 }
 
 android {
-    namespace = "navid.multiplash.feature.search"
+    namespace = "navid.multiplash.feature.search.implementation"
 }
