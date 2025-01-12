@@ -23,6 +23,8 @@ import navid.multiplash.feature.search.ui.SearchScreen
 import navid.multiplash.feature.search.ui.searchScreen
 import navid.multiplash.feature.topic.ui.navigateToTopicScreen
 import navid.multiplash.feature.topic.ui.topicScreen
+import navid.multiplash.feature.user.ui.navigateToUserScreen
+import navid.multiplash.feature.user.ui.userScreen
 import navid.multiplash.shared.navigation.ExploreGraph
 import navid.multiplash.shared.navigation.LibraryGraph
 import navid.multiplash.shared.navigation.SearchGraph
@@ -56,10 +58,14 @@ private fun NavGraphBuilder.exploreGraph(navController: NavHostController) {
             onNavigationIconClick = navController::popBackStack,
             onLocationClick = navController::navigateToPhotosScreen,
             onTagClick = navController::navigateToPhotosScreen,
+            onUserClick = navController::navigateToUserScreen,
         )
         photosScreen(
             onNavigationIconClick = navController::popBackStack,
             onPhotoClick = navController::navigateToDetailsScreen,
+        )
+        userScreen(
+            onNavigationIconClick = navController::popBackStack,
         )
     }
 }
@@ -74,15 +80,19 @@ private fun NavGraphBuilder.searchGraph(navController: NavHostController) {
             onNavigationIconClick = navController::popBackStack,
             onLocationClick = navController::navigateToPhotosScreen,
             onTagClick = navController::navigateToPhotosScreen,
+            onUserClick = navController::navigateToUserScreen,
         )
         topicScreen(
             onNavigationIconClick = navController::popBackStack,
-            onUserClick = {},
+            onUserClick = navController::navigateToUserScreen,
             onPhotoClick = navController::navigateToDetailsScreen,
         )
         photosScreen(
             onNavigationIconClick = navController::popBackStack,
             onPhotoClick = navController::navigateToDetailsScreen,
+        )
+        userScreen(
+            onNavigationIconClick = navController::popBackStack,
         )
     }
 }

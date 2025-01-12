@@ -3,14 +3,38 @@ package navid.multiplash.feature.details.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTransformGestures
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.*
-import androidx.compose.material3.*
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.InputChip
+import androidx.compose.material3.InputChipDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,6 +68,7 @@ internal fun DetailsUi(
     onNavigationIconClick: () -> Unit,
     onLocationClick: (String) -> Unit,
     onTagClick: (String) -> Unit,
+    onUserClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: DetailsViewModel by rememberViewModel(arg = args)
@@ -54,6 +79,7 @@ internal fun DetailsUi(
         onNavigationIconClick = onNavigationIconClick,
         onLocationClick = onLocationClick,
         onTagClick = onTagClick,
+        onUserClick = onUserClick,
         onImageLoading = viewModel::onImageLoading,
         onImageComplete = viewModel::onImageComplete,
         modifier = modifier,
@@ -67,6 +93,7 @@ private fun DetailsUi(
     onNavigationIconClick: () -> Unit,
     onLocationClick: (String) -> Unit,
     onTagClick: (String) -> Unit,
+    onUserClick: (String) -> Unit,
     onImageLoading: () -> Unit,
     onImageComplete: () -> Unit,
     modifier: Modifier = Modifier,
@@ -169,7 +196,7 @@ private fun DetailsUi(
                             DateItem(date = photo.publishedDate)
                             photo.device?.let { DeviceItem(device = it) }
                             TagsItem(tags = photo.tags, onTagClick = onTagClick)
-                            ProfileItem(photo = photo)
+                            ProfileItem(photo = photo, onUserClick = onUserClick)
                         }
                     }
                 }
@@ -342,6 +369,7 @@ private fun TagsItem(
 @Composable
 private fun ProfileItem(
     photo: GetPhotoUseCase.Photo,
+    onUserClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -359,9 +387,12 @@ private fun ProfileItem(
                 .width(48.dp)
                 .height(48.dp)
                 .clip(CircleShape)
-                .clickable { },
+                .clickable { onUserClick(photo.user.username) },
         )
-        Column(horizontalAlignment = Alignment.Start) {
+        Column(
+            horizontalAlignment = Alignment.Start,
+            modifier = Modifier.clickable { onUserClick(photo.user.username) },
+        ) {
             Text(text = photo.user.name, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
             Text(
                 text = photo.userTotalPhotos,

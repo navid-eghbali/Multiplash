@@ -32,6 +32,7 @@ include(
     ":feature:search:api",
     ":feature:search:implementation",
     ":feature:topic",
+    ":feature:user",
     ":kodein-viewmodel",
     ":shared",
 )

@@ -312,7 +312,7 @@ private fun TopicTopContributorsItem(
                         .width(64.dp)
                         .height(64.dp)
                         .clip(CircleShape)
-                        .clickable { onUserClick(user.id) },
+                        .clickable { onUserClick(user.username) },
                 )
             }
         }

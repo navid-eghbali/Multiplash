@@ -40,6 +40,7 @@ kotlin {
             implementation(projects.feature.photos)
             implementation(projects.feature.search.implementation)
             implementation(projects.feature.topic)
+            implementation(projects.feature.user)
 
             implementation(libs.kotlinx.serialization.json)
 

@@ -16,6 +16,7 @@ fun NavGraphBuilder.detailsScreen(
     onNavigationIconClick: () -> Unit,
     onLocationClick: (String) -> Unit,
     onTagClick: (String) -> Unit,
+    onUserClick: (String) -> Unit,
 ) {
     composable<DetailsScreen> {
         DetailsUi(
@@ -23,6 +24,7 @@ fun NavGraphBuilder.detailsScreen(
             onNavigationIconClick = onNavigationIconClick,
             onLocationClick = onLocationClick,
             onTagClick = onTagClick,
+            onUserClick = onUserClick,
         )
     }
 }
