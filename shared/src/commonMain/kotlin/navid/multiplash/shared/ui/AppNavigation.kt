@@ -66,6 +66,9 @@ private fun NavGraphBuilder.exploreGraph(navController: NavHostController) {
         )
         userScreen(
             onNavigationIconClick = navController::popBackStack,
+            onLocationClick = navController::navigateToPhotosScreen,
+            onInterestClick = navController::navigateToPhotosScreen,
+            onPhotoClick = navController::navigateToDetailsScreen,
         )
     }
 }
@@ -93,6 +96,9 @@ private fun NavGraphBuilder.searchGraph(navController: NavHostController) {
         )
         userScreen(
             onNavigationIconClick = navController::popBackStack,
+            onLocationClick = navController::navigateToPhotosScreen,
+            onInterestClick = navController::navigateToPhotosScreen,
+            onPhotoClick = navController::navigateToDetailsScreen,
         )
     }
 }

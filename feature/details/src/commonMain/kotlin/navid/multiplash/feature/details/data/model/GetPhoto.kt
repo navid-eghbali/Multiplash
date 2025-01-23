@@ -2,6 +2,7 @@ package navid.multiplash.feature.details.data.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import navid.multiplash.core.data.Tag
 import navid.multiplash.core.data.User
 
 internal object GetPhoto {
@@ -30,12 +31,6 @@ internal object GetPhoto {
         @Serializable
         data class Location(
             val name: String?,
-        )
-
-        @Serializable
-        data class Tag(
-            val type: String,
-            val title: String,
         )
 
         @Serializable

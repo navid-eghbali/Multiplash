@@ -28,7 +28,7 @@ internal class GetTopicsUseCaseImpl(
                     GetTopicsUseCase.Topic(
                         id = it.id,
                         title = it.title,
-                        totalPhotos = "${it.totalPhotos.withDecimalSeparator()} photos",
+                        totalPhotos = "${it.totalPhotos.toLong().withDecimalSeparator()} photos",
                         color = it.coverPhoto.color?.fromHexColorToLong(),
                         coverUrl = it.coverPhoto.urls.small,
                     )

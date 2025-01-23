@@ -39,15 +39,15 @@ internal class GetPhotoUseCaseImpl(
                 GetPhotoUseCase.Photo(
                     id = response.id,
                     color = response.color?.fromHexColorToLong(),
-                    views = response.views.withDecimalSeparator(),
-                    downloads = response.downloads.withDecimalSeparator(),
-                    likes = response.likes.withDecimalSeparator(),
+                    views = response.views.toLong().withDecimalSeparator(),
+                    downloads = response.downloads.toLong().withDecimalSeparator(),
+                    likes = response.likes.toLong().withDecimalSeparator(),
                     publishedDate = Instant.parse(response.createdAt).toLocalDateTime(TimeZone.currentSystemDefault()).let { date ->
                         "Published on ${date.month.name.lowercase().replaceFirstChar { it.titlecase() }} ${date.dayOfMonth}, ${date.year}"
                     },
                     description = response.description,
                     user = response.user,
-                    userTotalPhotos = "${response.user.totalPhotos.withDecimalSeparator()} photos",
+                    userTotalPhotos = "${response.user.totalPhotos.toLong().withDecimalSeparator()} photos",
                     device = response.exif?.name,
                     location = response.location.name,
                     tags = response.tags.map { it.title },

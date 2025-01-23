@@ -1,6 +1,6 @@
 package navid.multiplash.common.ext
 
-fun Int.withDecimalSeparator(): String = this
+fun Long.withDecimalSeparator(): String = this
     .toString()
     .reversed()
     .chunked(3)

@@ -11,4 +11,4 @@ data class User(
     val bio: String? = null,
     @SerialName("profile_image") val profileImage: ImageUrl,
     @SerialName("total_photos") val totalPhotos: Int,
-    )
+)
