@@ -4,6 +4,8 @@ import navid.multiplash.feature.details.data.remote.DetailsClient
 import navid.multiplash.feature.details.data.remote.DetailsClientImpl
 import navid.multiplash.feature.details.ui.DetailsScreen
 import navid.multiplash.feature.details.ui.DetailsViewModel
+import navid.multiplash.feature.details.usecase.DownloadPhotoUseCase
+import navid.multiplash.feature.details.usecase.DownloadPhotoUseCaseImpl
 import navid.multiplash.feature.details.usecase.GetPhotoUseCase
 import navid.multiplash.feature.details.usecase.GetPhotoUseCaseImpl
 import org.kodein.di.DI
@@ -26,10 +28,18 @@ val detailsModule = DI.Module(name = "DetailsModule") {
         )
     }
 
+    bindProvider<DownloadPhotoUseCase> {
+        DownloadPhotoUseCaseImpl(
+            detailsClient = instance(),
+            saveToFileUseCase = instance(),
+        )
+    }
+
     bindFactory { args: DetailsScreen ->
         DetailsViewModel(
             args = args,
             getPhotoUseCase = instance(),
+            downloadPhotoUseCase = instance(),
         )
     }
 }

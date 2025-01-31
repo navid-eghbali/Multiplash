@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -80,6 +81,7 @@ internal fun DetailsUi(
         onLocationClick = onLocationClick,
         onTagClick = onTagClick,
         onUserClick = onUserClick,
+        onDownloadClick = viewModel::onDownloadClick,
         onImageLoading = viewModel::onImageLoading,
         onImageComplete = viewModel::onImageComplete,
         modifier = modifier,
@@ -94,6 +96,7 @@ private fun DetailsUi(
     onLocationClick: (String) -> Unit,
     onTagClick: (String) -> Unit,
     onUserClick: (String) -> Unit,
+    onDownloadClick: (String, String) -> Unit,
     onImageLoading: () -> Unit,
     onImageComplete: () -> Unit,
     modifier: Modifier = Modifier,
@@ -197,6 +200,14 @@ private fun DetailsUi(
                             photo.device?.let { DeviceItem(device = it) }
                             TagsItem(tags = photo.tags, onTagClick = onTagClick)
                             ProfileItem(photo = photo, onUserClick = onUserClick)
+                            Button(
+                                onClick = { onDownloadClick(photo.id, photo.downloadLink) },
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                                    .fillMaxWidth(),
+                            ) {
+                                Text(text = "Download")
+                            }
                         }
                     }
                 }

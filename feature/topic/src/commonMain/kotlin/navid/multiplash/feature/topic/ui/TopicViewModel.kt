@@ -36,15 +36,12 @@ internal class TopicViewModel(
     private fun fetchTopic(topicId: String) {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            getTopicUseCase(topicId).fold(
-                onSuccess = { topic ->
-                    _state.update { it.copy(isLoading = false, topic = topic) }
-                },
-                onFailure = { throwable ->
-                    println(throwable.printStackTrace())
+            getTopicUseCase(topicId)
+                .onSuccess { topic -> _state.update { it.copy(isLoading = false, topic = topic) } }
+                .onFailure { throwable ->
+                    throwable.printStackTrace()
                     _state.update { it.copy(isLoading = false, errorMessage = throwable.message) }
-                },
-            )
+                }
         }
     }
 }

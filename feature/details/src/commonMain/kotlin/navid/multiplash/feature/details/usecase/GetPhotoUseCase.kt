@@ -26,6 +26,7 @@ internal fun interface GetPhotoUseCase {
         val location: String?,
         val tags: List<String>,
         val featured: String,
+        val downloadLink: String,
     )
 }
 
@@ -35,25 +36,28 @@ internal class GetPhotoUseCaseImpl(
 
     override suspend fun invoke(photoId: String): Result<GetPhotoUseCase.Photo> = detailsClient.getPhoto(photoId).fold(
         onSuccess = { response ->
-            Result.success(
-                GetPhotoUseCase.Photo(
-                    id = response.id,
-                    color = response.color?.fromHexColorToLong(),
-                    views = response.views.toLong().withDecimalSeparator(),
-                    downloads = response.downloads.toLong().withDecimalSeparator(),
-                    likes = response.likes.toLong().withDecimalSeparator(),
-                    publishedDate = Instant.parse(response.createdAt).toLocalDateTime(TimeZone.currentSystemDefault()).let { date ->
-                        "Published on ${date.month.name.lowercase().replaceFirstChar { it.titlecase() }} ${date.dayOfMonth}, ${date.year}"
-                    },
-                    description = response.description,
-                    user = response.user,
-                    userTotalPhotos = "${response.user.totalPhotos.toLong().withDecimalSeparator()} photos",
-                    device = response.exif?.name,
-                    location = response.location.name,
-                    tags = response.tags.map { it.title },
-                    featured = response.topics.joinToString(),
+            with(response) {
+                Result.success(
+                    GetPhotoUseCase.Photo(
+                        id = id,
+                        color = color?.fromHexColorToLong(),
+                        views = views.toLong().withDecimalSeparator(),
+                        downloads = downloads.toLong().withDecimalSeparator(),
+                        likes = likes.toLong().withDecimalSeparator(),
+                        publishedDate = Instant.parse(createdAt).toLocalDateTime(TimeZone.currentSystemDefault()).let { date ->
+                            "Published on ${date.month.name.lowercase().replaceFirstChar { it.titlecase() }} ${date.dayOfMonth}, ${date.year}"
+                        },
+                        description = description,
+                        user = user,
+                        userTotalPhotos = "${user.totalPhotos.toLong().withDecimalSeparator()} photos",
+                        device = exif?.name,
+                        location = location.name,
+                        tags = tags.map { it.title },
+                        featured = topics.joinToString(),
+                        downloadLink = links.download,
+                    )
                 )
-            )
+            }
         },
         onFailure = { Result.failure(it) },
     )

@@ -46,12 +46,12 @@ internal class SearchViewModel(
     private fun fetchTopics() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            getTopicsUseCase().fold(
-                onSuccess = { topics ->
-                    _state.update { it.copy(isLoading = false, topics = topics) }
-                },
-                onFailure = { println(it.printStackTrace()) },
-            )
+            getTopicsUseCase()
+                .onSuccess { topics -> _state.update { it.copy(isLoading = false, topics = topics) } }
+                .onFailure { throwable ->
+                    throwable.printStackTrace()
+                    _state.update { it.copy(isLoading = false) }
+                }
         }
     }
 }

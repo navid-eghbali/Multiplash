@@ -8,11 +8,13 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import navid.multiplash.feature.details.usecase.DownloadPhotoUseCase
 import navid.multiplash.feature.details.usecase.GetPhotoUseCase
 
 internal class DetailsViewModel(
     args: DetailsScreen,
     private val getPhotoUseCase: GetPhotoUseCase,
+    private val downloadPhotoUseCase: DownloadPhotoUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(DetailsState(url = args.photoUrl))
@@ -32,17 +34,26 @@ internal class DetailsViewModel(
         _state.update { it.copy(isLoading = false) }
     }
 
+    fun onDownloadClick(photoId: String, url: String) {
+        viewModelScope.launch {
+            _state.update { it.copy(isDownloading = true) }
+            downloadPhotoUseCase(photoId, url)
+                .onSuccess { path ->
+                    println("File successfully saved to $path")
+                    _state.update { it.copy(isDownloading = false) }
+                }
+                .onFailure { throwable ->
+                    throwable.printStackTrace()
+                    _state.update { it.copy(isDownloading = false) }
+                }
+        }
+    }
+
     private fun fetchPhoto(photoId: String) {
         viewModelScope.launch {
-            getPhotoUseCase(photoId).fold(
-                onSuccess = { photo ->
-                    println(photo)
-                    _state.update { it.copy(photo = photo) }
-                },
-                onFailure = { throwable ->
-                    println(throwable.printStackTrace())
-                },
-            )
+            getPhotoUseCase(photoId)
+                .onSuccess { photo -> _state.update { it.copy(photo = photo) } }
+                .onFailure { throwable -> throwable.printStackTrace() }
         }
     }
 }

@@ -34,7 +34,7 @@ actual fun provideHttpClient(): HttpClient = HttpClient(OkHttp) {
 
     install(Logging) {
         logger = Logger.DEFAULT
-        level = LogLevel.ALL
+        level = LogLevel.INFO
     }
 
     install(AuthorizationPlugin)

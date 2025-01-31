@@ -21,6 +21,7 @@ internal object GetPhoto {
         val location: Location,
         val tags: List<Tag>,
         val topics: List<Topic>,
+        val links: Links,
     ) {
 
         @Serializable
@@ -37,6 +38,11 @@ internal object GetPhoto {
         data class Topic(
             val id: String,
             val title: String,
+        )
+
+        @Serializable
+        data class Links(
+            val download: String,
         )
     }
 

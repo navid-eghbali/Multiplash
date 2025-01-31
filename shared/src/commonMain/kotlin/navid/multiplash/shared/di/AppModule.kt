@@ -16,6 +16,7 @@ import org.kodein.di.conf.ConfigurableDI
 val appModule: ConfigurableDI = ConfigurableDI().addConfig {
     import(coreApiModule)
     import(coreAsyncModule)
+    import(platformModule)
     import(detailsModule)
     import(exploreModule)
     import(libraryModule)

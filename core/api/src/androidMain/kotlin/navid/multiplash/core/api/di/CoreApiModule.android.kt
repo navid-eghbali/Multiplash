@@ -35,7 +35,7 @@ actual fun provideHttpClient(): HttpClient = HttpClient(OkHttp) {
 
     install(Logging) {
         logger = Logger.ANDROID
-        level = LogLevel.ALL
+        level = LogLevel.INFO
     }
 
     install(AuthorizationPlugin)

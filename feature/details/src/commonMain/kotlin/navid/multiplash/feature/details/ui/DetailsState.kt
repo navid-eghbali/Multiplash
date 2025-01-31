@@ -8,4 +8,5 @@ internal data class DetailsState(
     val url: String,
     val photo: GetPhotoUseCase.Photo? = null,
     val isLoading: Boolean = false,
+    val isDownloading: Boolean = false,
 )

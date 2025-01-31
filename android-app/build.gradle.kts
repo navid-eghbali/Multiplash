@@ -9,6 +9,7 @@ kotlin {
     androidTarget()
     sourceSets {
         androidMain.dependencies {
+            implementation(projects.core.di)
             implementation(projects.shared)
 
             implementation(libs.androidx.activity.compose)

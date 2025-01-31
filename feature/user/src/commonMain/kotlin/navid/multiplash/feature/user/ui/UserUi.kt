@@ -29,6 +29,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -57,7 +58,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.cash.paging.LoadStateNotLoading
+import app.cash.paging.LoadStateError
+import app.cash.paging.LoadStateLoading
 import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImage
@@ -66,6 +68,8 @@ import navid.multiplash.core.resources.Res
 import navid.multiplash.core.resources.ic_downloads
 import navid.multiplash.core.resources.ic_location
 import navid.multiplash.core.resources.ic_views
+import navid.multiplash.feature.user.usecase.GetUserStatisticsUseCase
+import navid.multiplash.feature.user.usecase.GetUserUseCase
 import navid.multiplash.kodein.viewmodel.rememberViewModel
 import org.jetbrains.compose.resources.painterResource
 import kotlin.math.min
@@ -86,11 +90,12 @@ internal fun UserUi(
     UserUi(
         state = state,
         pagedItems = pagedPhotos,
-        onReload = viewModel::onReload,
         onNavigationIconClick = onNavigationIconClick,
+        onReload = viewModel::onReload,
         onLocationClick = onLocationClick,
         onInterestClick = onInterestClick,
         onPhotoClick = onPhotoClick,
+        onReloadStats = viewModel::onReloadStats,
         modifier = modifier,
     )
 }
@@ -100,11 +105,12 @@ internal fun UserUi(
 private fun UserUi(
     state: UserState,
     pagedItems: LazyPagingItems<Photo>,
-    onReload: () -> Unit,
     onNavigationIconClick: () -> Unit,
+    onReload: () -> Unit,
     onLocationClick: (String) -> Unit,
     onInterestClick: (String) -> Unit,
     onPhotoClick: (String, String) -> Unit,
+    onReloadStats: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val gridState = rememberLazyGridState()
@@ -113,7 +119,7 @@ private fun UserUi(
         topBar = {
             if (!firstItemVisible) {
                 TopAppBar(
-                    title = { Text(text = (state as? UserState.Success)?.name.orEmpty()) },
+                    title = { Text(text = state.user?.name.orEmpty()) },
                     navigationIcon = {
                         IconButton(onClick = onNavigationIconClick) {
                             Icon(imageVector = Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
@@ -126,9 +132,9 @@ private fun UserUi(
         modifier = modifier.fillMaxSize(),
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            when (state) {
-                is UserState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                is UserState.Error -> Column(
+            when {
+                state.isLoading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                state.errorMessage != null -> Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
@@ -144,21 +150,27 @@ private fun UserUi(
                     Button(onClick = onReload) { Text(text = "Reload") }
                 }
 
-                is UserState.Success -> LazyVerticalGrid(
+                state.user != null -> LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     state = gridState,
                     verticalArrangement = Arrangement.spacedBy(1.dp),
                     horizontalArrangement = Arrangement.spacedBy(1.dp),
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    item(span = { GridItemSpan(maxLineSpan) }) { UserHeaderItem(state) }
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        UserHeaderItem(
+                            user = state.user,
+                            stats = state.stats,
+                            onReloadStats = onReloadStats,
+                        )
+                    }
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         UserInfoItem(
-                            state = state,
+                            user = state.user,
                             modifier = Modifier.padding(horizontal = 16.dp),
                         )
                     }
-                    state.bio?.let { bio ->
+                    state.user.bio?.let { bio ->
                         item(span = { GridItemSpan(maxLineSpan) }) {
                             UserBioItem(
                                 bio = bio,
@@ -166,7 +178,7 @@ private fun UserUi(
                             )
                         }
                     }
-                    state.location?.let { location ->
+                    state.user.location?.let { location ->
                         item(span = { GridItemSpan(maxLineSpan) }) {
                             UserLocationItem(
                                 location = location,
@@ -177,22 +189,41 @@ private fun UserUi(
                     }
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         UserFollowItem(
-                            state = state,
+                            user = state.user,
                             modifier = Modifier.padding(horizontal = 16.dp),
                         )
                     }
-                    if (state.interests.isNotEmpty()) {
+                    if (state.user.interests.isNotEmpty()) {
                         item(span = { GridItemSpan(maxLineSpan) }) {
                             UserInterestsItem(
-                                interests = state.interests,
+                                interests = state.user.interests,
                                 onInterestClick = onInterestClick,
                             )
                         }
                     }
-                    if (pagedItems.loadState.refresh is LoadStateNotLoading) {
-                        items(count = pagedItems.itemCount) { index ->
-                            pagedItems[index]?.let {
-                                PhotoItem(photo = it, onPhotoClick = onPhotoClick)
+                    when (val refreshLoadState = pagedItems.loadState.refresh) {
+                        is LoadStateLoading -> item(span = { GridItemSpan(maxLineSpan) }) {
+                            CircularProgressIndicator(modifier = Modifier.size(48.dp))
+                        }
+
+                        is LoadStateError -> item(span = { GridItemSpan(maxLineSpan) }) {
+                            ReloadItem(
+                                errorMessage = refreshLoadState.error.message,
+                                onReload = { pagedItems.refresh() },
+                                modifier = Modifier.align(Alignment.Center),
+                            )
+                        }
+
+                        else -> {
+                            items(count = pagedItems.itemCount) { index ->
+                                pagedItems[index]?.let {
+                                    PhotoItem(photo = it, onPhotoClick = onPhotoClick)
+                                }
+                            }
+                            when (pagedItems.loadState.append) {
+                                is LoadStateLoading -> item(span = { GridItemSpan(maxLineSpan) }) { LoadingItem() }
+                                is LoadStateError -> item(span = { GridItemSpan(maxLineSpan) }) { RetryItem(onRetry = { pagedItems.retry() }) }
+                                else -> Unit
                             }
                         }
                     }
@@ -219,7 +250,9 @@ private fun UserUi(
 
 @Composable
 private fun UserHeaderItem(
-    state: UserState.Success,
+    user: GetUserUseCase.User,
+    stats: GetUserStatisticsUseCase.Stats?,
+    onReloadStats: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val localDensity = LocalDensity.current
@@ -236,7 +269,7 @@ private fun UserHeaderItem(
                 .onGloballyPositioned { coordinates -> headerHeight = with(localDensity) { coordinates.size.height.toDp() } }
                 .align(Alignment.TopCenter),
         ) {
-            val pagerState = rememberPagerState { state.photos.size }
+            val pagerState = rememberPagerState { user.photos.size }
 
             HorizontalPager(
                 state = pagerState,
@@ -244,7 +277,7 @@ private fun UserHeaderItem(
                 modifier = Modifier.fillMaxSize(),
             ) { page ->
                 AsyncImage(
-                    model = state.photos[page].urls.regular,
+                    model = user.photos[page].urls.regular,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize(),
@@ -276,7 +309,7 @@ private fun UserHeaderItem(
             }
         }
         AsyncImage(
-            model = state.profileImage,
+            model = user.profileImage,
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -287,7 +320,8 @@ private fun UserHeaderItem(
                 .align(Alignment.BottomStart),
         )
         StatisticsItem(
-            state = state,
+            stats = stats,
+            onReloadStats = onReloadStats,
             modifier = Modifier.align(Alignment.BottomEnd),
         )
     }
@@ -295,7 +329,8 @@ private fun UserHeaderItem(
 
 @Composable
 private fun StatisticsItem(
-    state: UserState.Success,
+    stats: GetUserStatisticsUseCase.Stats?,
+    onReloadStats: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -307,20 +342,34 @@ private fun StatisticsItem(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                text = state.totalDownloads,
-                style = MaterialTheme.typography.titleMedium,
-            )
+            when {
+                stats == null -> CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                stats.totalDownloads.isEmpty() -> IconButton(onClick = onReloadStats) {
+                    Icon(
+                        imageVector = Icons.Rounded.Refresh,
+                        contentDescription = "Reload Statistics",
+                    )
+                }
+
+                else -> Text(text = stats.totalDownloads, style = MaterialTheme.typography.titleMedium)
+            }
             Icon(painter = painterResource(Res.drawable.ic_downloads), contentDescription = "Total Downloads")
         }
         Row(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                text = state.totalViews,
-                style = MaterialTheme.typography.titleMedium,
-            )
+            when {
+                stats == null -> CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                stats.totalViews.isEmpty() -> IconButton(onClick = onReloadStats) {
+                    Icon(
+                        imageVector = Icons.Rounded.Refresh,
+                        contentDescription = "Reload Statistics",
+                    )
+                }
+
+                else -> Text(text = stats.totalViews, style = MaterialTheme.typography.titleMedium)
+            }
             Icon(painter = painterResource(Res.drawable.ic_views), contentDescription = "Total Views")
         }
     }
@@ -328,7 +377,7 @@ private fun StatisticsItem(
 
 @Composable
 private fun UserInfoItem(
-    state: UserState.Success,
+    user: GetUserUseCase.User,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -339,12 +388,12 @@ private fun UserInfoItem(
             .fillMaxWidth(),
     ) {
         Text(
-            text = state.name,
+            text = user.name,
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.headlineMedium,
         )
         Text(
-            text = state.username,
+            text = user.username,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             style = MaterialTheme.typography.titleMedium,
         )
@@ -396,7 +445,7 @@ private fun UserLocationItem(
 
 @Composable
 private fun UserFollowItem(
-    state: UserState.Success,
+    user: GetUserUseCase.User,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -411,7 +460,7 @@ private fun UserFollowItem(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = state.followingCount,
+                text = user.followingCount,
                 style = MaterialTheme.typography.titleMedium,
             )
             Text(
@@ -425,7 +474,7 @@ private fun UserFollowItem(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = state.followersCount,
+                text = user.followersCount,
                 style = MaterialTheme.typography.titleMedium,
             )
             Text(
@@ -478,6 +527,59 @@ private fun PhotoItem(
             .aspectRatio(1f)
             .clickable { onPhotoClick(photo.id, photo.urls.full) },
     )
+}
+
+@Composable
+private fun LoadingItem(
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(64.dp),
+    ) {
+        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+    }
+}
+
+@Composable
+private fun ReloadItem(
+    errorMessage: String?,
+    onReload: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.padding(16.dp),
+    ) {
+        Text(
+            text = "Error: $errorMessage",
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentSize(Alignment.Center),
+        )
+        Button(onClick = onReload) { Text(text = "Reload") }
+    }
+}
+
+@Composable
+private fun RetryItem(
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+    ) {
+        Button(
+            onClick = onRetry,
+            modifier = Modifier.align(Alignment.Center),
+        ) {
+            Text(text = "Retry")
+        }
+    }
 }
 
 private const val PROFILE_IMAGE_HEIGHT = 128
