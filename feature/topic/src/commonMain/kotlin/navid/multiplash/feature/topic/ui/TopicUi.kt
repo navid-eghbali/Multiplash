@@ -56,8 +56,14 @@ import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImage
 import navid.multiplash.core.data.Photo
+import navid.multiplash.core.resources.Res
+import navid.multiplash.core.resources.error
+import navid.multiplash.core.resources.reload
+import navid.multiplash.core.resources.top_contributors
+import navid.multiplash.core.resources.total_photos
 import navid.multiplash.feature.topic.usecase.GetTopicUseCase
-import navid.multiplash.kodein.viewmodel.rememberViewModel
+import org.jetbrains.compose.resources.stringResource
+import org.kodein.di.compose.viewmodel.rememberViewModel
 import kotlin.math.min
 
 @Composable
@@ -123,12 +129,12 @@ private fun TopicUi(
                         .padding(16.dp),
                 ) {
                     Text(
-                        text = "Error: ${state.errorMessage}",
+                        text = stringResource(Res.string.error, state.errorMessage),
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentSize(Alignment.Center),
                     )
-                    Button(onClick = onReload) { Text(text = "Reload") }
+                    Button(onClick = onReload) { Text(text = stringResource(Res.string.reload)) }
                 }
 
                 state.topic != null -> LazyVerticalGrid(
@@ -252,7 +258,7 @@ private fun TopicHeaderItem(
                 style = MaterialTheme.typography.headlineLarge,
             )
             Text(
-                text = topic.totalPhotos,
+                text = stringResource(Res.string.total_photos, topic.totalPhotos),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.bodyMedium
             )
@@ -290,7 +296,7 @@ private fun TopicTopContributorsItem(
             .padding(bottom = 16.dp),
     ) {
         Text(
-            text = "Top Contributors",
+            text = stringResource(Res.string.top_contributors),
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier

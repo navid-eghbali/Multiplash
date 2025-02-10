@@ -18,8 +18,8 @@ kotlin {
             implementation(projects.common)
             implementation(projects.core.api)
             implementation(projects.core.di)
+            implementation(projects.core.resources)
             implementation(projects.core.ui)
-            implementation(projects.kodeinViewmodel)
 
             implementation(projects.feature.search.api)
 

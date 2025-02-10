@@ -17,7 +17,6 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core.di)
             implementation(projects.core.ui)
-            implementation(projects.kodeinViewmodel)
 
             implementation(libs.coil.core)
             implementation(libs.coil.compose)

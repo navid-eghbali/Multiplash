@@ -34,7 +34,7 @@ internal class GetTopicUseCaseImpl(
                         id = id,
                         title = title,
                         description = description.orEmpty(),
-                        totalPhotos = "${totalPhotos.toLong().withDecimalSeparator()} photos",
+                        totalPhotos = totalPhotos.toLong().withDecimalSeparator(),
                         owners = owners.joinToString { it.name },
                         topContributors = topContributors ?: emptyList(),
                         color = coverPhoto.color?.fromHexColorToLong(),

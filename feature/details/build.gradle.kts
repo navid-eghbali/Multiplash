@@ -14,6 +14,9 @@ kotlin {
     iosSimulatorArm64()
 
     sourceSets {
+        androidMain.dependencies {
+            implementation(compose.components.resources)
+        }
         commonMain.dependencies {
             implementation(projects.common)
             implementation(projects.core.api)
@@ -21,7 +24,6 @@ kotlin {
             implementation(projects.core.di)
             implementation(projects.core.resources)
             implementation(projects.core.ui)
-            implementation(projects.kodeinViewmodel)
 
             implementation(libs.coil.core)
             implementation(libs.coil.compose)
@@ -34,6 +36,14 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
+        }
+        iosMain.dependencies {
+            implementation(compose.components.resources)
+        }
+        val desktopMain by getting {
+            dependencies {
+                implementation(compose.components.resources)
+            }
         }
     }
 }

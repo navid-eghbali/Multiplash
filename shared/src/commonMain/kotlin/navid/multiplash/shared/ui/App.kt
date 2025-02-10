@@ -36,15 +36,17 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import navid.multiplash.core.resources.LocalPlatformStrings
+import navid.multiplash.core.resources.platformStrings
 import navid.multiplash.core.ui.AppTheme
 import navid.multiplash.core.ui.LocalWindowSizeClass
-import navid.multiplash.kodein.viewmodel.rememberViewModel
 import navid.multiplash.shared.di.appModule
 import navid.multiplash.shared.navigation.NavigationItem
 import navid.multiplash.shared.navigation.NavigationType
 import navid.multiplash.shared.navigation.navigateToRoute
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.kodein.di.compose.viewmodel.rememberViewModel
 import org.kodein.di.compose.withDI
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
@@ -55,6 +57,7 @@ fun App(
 ) = withDI(appModule) {
     CompositionLocalProvider(
         LocalWindowSizeClass provides calculateWindowSizeClass(),
+        LocalPlatformStrings provides platformStrings(),
     ) {
         AppTheme(
             darkTheme = isSystemInDarkTheme(),

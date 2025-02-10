@@ -21,7 +21,6 @@ kotlin {
             implementation(projects.core.di)
             implementation(projects.core.resources)
             implementation(projects.core.ui)
-            implementation(projects.kodeinViewmodel)
 
             implementation(libs.coil.core)
             implementation(libs.coil.compose)

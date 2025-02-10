@@ -16,8 +16,8 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.di)
+            implementation(projects.core.resources)
             implementation(projects.core.ui)
-            implementation(projects.kodeinViewmodel)
 
             implementation(projects.feature.search.api)
 

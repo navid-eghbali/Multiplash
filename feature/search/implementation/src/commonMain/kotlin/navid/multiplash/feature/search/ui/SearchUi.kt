@@ -46,8 +46,15 @@ import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImage
 import navid.multiplash.core.data.Photo
+import navid.multiplash.core.resources.Res
+import navid.multiplash.core.resources.error
+import navid.multiplash.core.resources.reload
+import navid.multiplash.core.resources.retry
+import navid.multiplash.core.resources.search_placeholder
+import navid.multiplash.core.resources.total_photos
 import navid.multiplash.feature.search.usecase.GetTopicsUseCase
-import navid.multiplash.kodein.viewmodel.rememberViewModel
+import org.jetbrains.compose.resources.stringResource
+import org.kodein.di.compose.viewmodel.rememberViewModel
 
 @Composable
 internal fun SearchUi(
@@ -88,7 +95,7 @@ private fun SearchUi(
         OutlinedTextField(
             value = state.query,
             onValueChange = { onQueryChange(it) },
-            placeholder = { Text(text = "What do you want to see?") },
+            placeholder = { Text(text = stringResource(Res.string.search_placeholder)) },
             leadingIcon = { Icon(Icons.Rounded.Search, null) },
             trailingIcon = {
                 if (state.query.isNotEmpty()) {
@@ -200,7 +207,7 @@ private fun TopicItem(
                     .padding(16.dp),
             ) {
                 Text(
-                    text = topic.totalPhotos,
+                    text = stringResource(Res.string.total_photos, topic.totalPhotos),
                     style = MaterialTheme.typography.labelMedium,
                 )
                 Icon(imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight, null)
@@ -266,12 +273,12 @@ private fun ReloadItem(
         modifier = modifier.padding(16.dp),
     ) {
         Text(
-            text = "Error: $errorMessage",
+            text = stringResource(Res.string.error, errorMessage.orEmpty()),
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentSize(Alignment.Center),
         )
-        Button(onClick = onReload) { Text(text = "Reload") }
+        Button(onClick = onReload) { Text(text = stringResource(Res.string.reload)) }
     }
 }
 
@@ -289,7 +296,7 @@ private fun RetryItem(
             onClick = onRetry,
             modifier = Modifier.align(Alignment.Center),
         ) {
-            Text(text = "Retry")
+            Text(text = stringResource(Res.string.retry))
         }
     }
 }

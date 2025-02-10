@@ -3,15 +3,15 @@ agp = "8.7.3"
 android-compile-sdk = "35"
 android-min-sdk = "24"
 android-target-sdk = "35"
-androidx-activity-compose = "1.9.3"
+androidx-activity-compose = "1.10.0"
 build-konfig-plugin = "0.15.2"
-coil = "3.0.0-rc02"
-compose-plugin = "1.7.3"
-coroutines = "1.9.0"
-kodein = "7.22.0"
-kotlin = "2.0.21"
-kotlinx-serialization = "1.7.3"
-ktor = "3.0.1"
+coil = "3.1.0"
+compose-plugin = "1.8.0-alpha02"
+coroutines = "1.10.1"
+kodein = "7.25.0"
+kotlin = "2.1.10"
+kotlinx-serialization = "1.8.0"
+ktor = "3.0.3"
 paging = "3.3.0-alpha02-0.5.1"
 
 [plugins]
@@ -27,8 +27,8 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
-androidx-lifecycle-viewmodel-compose = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3"
-androidx-navigation-compose = "org.jetbrains.androidx.navigation:navigation-compose:2.8.0-alpha10"
+androidx-lifecycle-viewmodel-compose = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.9.0-alpha02"
+androidx-navigation-compose = "org.jetbrains.androidx.navigation:navigation-compose:2.8.0-alpha12"
 androidx-material3-windowsizeclass = { module = "org.jetbrains.compose.material3:material3-window-size-class", version.ref = "compose-plugin" }
 
 chrisbanes-material3-windowsizeclass = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.5.0"

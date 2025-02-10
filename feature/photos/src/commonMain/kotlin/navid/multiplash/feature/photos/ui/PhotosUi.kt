@@ -35,7 +35,12 @@ import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImage
 import navid.multiplash.core.data.Photo
-import navid.multiplash.kodein.viewmodel.rememberViewModel
+import navid.multiplash.core.resources.Res
+import navid.multiplash.core.resources.error
+import navid.multiplash.core.resources.reload
+import navid.multiplash.core.resources.retry
+import org.jetbrains.compose.resources.stringResource
+import org.kodein.di.compose.viewmodel.rememberViewModel
 
 @Composable
 internal fun PhotosUi(
@@ -161,12 +166,12 @@ private fun ReloadItem(
         modifier = modifier.padding(16.dp),
     ) {
         Text(
-            text = "Error: $errorMessage",
+            text = stringResource(Res.string.error, errorMessage.orEmpty()),
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentSize(Alignment.Center),
         )
-        Button(onClick = onReload) { Text(text = "Reload") }
+        Button(onClick = onReload) { Text(text = stringResource(Res.string.reload)) }
     }
 }
 
@@ -184,7 +189,7 @@ private fun RetryItem(
             onClick = onRetry,
             modifier = Modifier.align(Alignment.Center),
         ) {
-            Text(text = "Retry")
+            Text(text = stringResource(Res.string.retry))
         }
     }
 }

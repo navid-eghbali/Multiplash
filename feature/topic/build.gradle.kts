@@ -19,8 +19,8 @@ kotlin {
             implementation(projects.core.api)
             implementation(projects.core.data)
             implementation(projects.core.di)
+            implementation(projects.core.resources)
             implementation(projects.core.ui)
-            implementation(projects.kodeinViewmodel)
 
             implementation(libs.coil.core)
             implementation(libs.coil.compose)
@@ -33,6 +33,7 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.ui)
+            implementation(compose.components.resources)
         }
     }
 }

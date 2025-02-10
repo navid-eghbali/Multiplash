@@ -31,7 +31,7 @@ internal class GetUserUseCaseImpl(
                 Result.success(
                     GetUserUseCase.User(
                         name = name,
-                        username = "@$username",
+                        username = username,
                         photos = photos,
                         profileImage = profileImage.large,
                         bio = bio,

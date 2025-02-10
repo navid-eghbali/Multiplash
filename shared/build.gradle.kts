@@ -33,7 +33,6 @@ kotlin {
             implementation(projects.core.di)
             implementation(projects.core.resources)
             implementation(projects.core.ui)
-            implementation(projects.kodeinViewmodel)
             implementation(projects.feature.details)
             implementation(projects.feature.explore)
             implementation(projects.feature.library)

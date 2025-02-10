@@ -18,7 +18,9 @@ internal fun interface GetPhotoUseCase {
         val views: String,
         val downloads: String,
         val likes: String,
-        val publishedDate: String,
+        val publishedDateYear: String,
+        val publishedDateMonth: String,
+        val publishedDateDay: String,
         val description: String?,
         val user: User,
         val userTotalPhotos: String,
@@ -37,6 +39,7 @@ internal class GetPhotoUseCaseImpl(
     override suspend fun invoke(photoId: String): Result<GetPhotoUseCase.Photo> = detailsClient.getPhoto(photoId).fold(
         onSuccess = { response ->
             with(response) {
+                val date = Instant.parse(createdAt).toLocalDateTime(TimeZone.currentSystemDefault())
                 Result.success(
                     GetPhotoUseCase.Photo(
                         id = id,
@@ -44,12 +47,12 @@ internal class GetPhotoUseCaseImpl(
                         views = views.toLong().withDecimalSeparator(),
                         downloads = downloads.toLong().withDecimalSeparator(),
                         likes = likes.toLong().withDecimalSeparator(),
-                        publishedDate = Instant.parse(createdAt).toLocalDateTime(TimeZone.currentSystemDefault()).let { date ->
-                            "Published on ${date.month.name.lowercase().replaceFirstChar { it.titlecase() }} ${date.dayOfMonth}, ${date.year}"
-                        },
+                        publishedDateYear = date.year.toString(),
+                        publishedDateMonth = date.month.name.lowercase().replaceFirstChar { it.titlecase() },
+                        publishedDateDay = date.dayOfMonth.toString(),
                         description = description,
                         user = user,
-                        userTotalPhotos = "${user.totalPhotos.toLong().withDecimalSeparator()} photos",
+                        userTotalPhotos = user.totalPhotos.toLong().withDecimalSeparator(),
                         device = exif?.name,
                         location = location.name,
                         tags = tags.map { it.title },

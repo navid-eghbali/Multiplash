@@ -3,4 +3,18 @@
     <string name="explore">Explore</string>
     <string name="search">Search</string>
     <string name="library">Library</string>
+    <string name="reload">Reload</string>
+    <string name="retry">Retry</string>
+    <string name="details">Details</string>
+    <string name="likes">Likes</string>
+    <string name="downloads">Downloads</string>
+    <string name="views">Views</string>
+    <string name="following">Following</string>
+    <string name="followers">Followers</string>
+    <string name="top_contributors">Top Contributors</string>
+    <string name="search_placeholder">What do you want to see?</string>
+    <string name="published_date">Published on %1$s %2$s, %3$s</string>
+    <string name="total_photos">%1$s photos</string>
+    <string name="error">Error: %1$s</string>
+    <string name="username">@%1$s</string>
 </resources>

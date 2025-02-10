@@ -65,13 +65,20 @@ import app.cash.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImage
 import navid.multiplash.core.data.Photo
 import navid.multiplash.core.resources.Res
+import navid.multiplash.core.resources.error
+import navid.multiplash.core.resources.followers
+import navid.multiplash.core.resources.following
 import navid.multiplash.core.resources.ic_downloads
 import navid.multiplash.core.resources.ic_location
 import navid.multiplash.core.resources.ic_views
+import navid.multiplash.core.resources.reload
+import navid.multiplash.core.resources.retry
+import navid.multiplash.core.resources.username
 import navid.multiplash.feature.user.usecase.GetUserStatisticsUseCase
 import navid.multiplash.feature.user.usecase.GetUserUseCase
-import navid.multiplash.kodein.viewmodel.rememberViewModel
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
+import org.kodein.di.compose.viewmodel.rememberViewModel
 import kotlin.math.min
 
 @Composable
@@ -142,12 +149,12 @@ private fun UserUi(
                         .padding(16.dp),
                 ) {
                     Text(
-                        text = "Error: ${state.errorMessage}",
+                        text = stringResource(Res.string.error, state.errorMessage),
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentSize(Alignment.Center),
                     )
-                    Button(onClick = onReload) { Text(text = "Reload") }
+                    Button(onClick = onReload) { Text(text = stringResource(Res.string.reload)) }
                 }
 
                 state.user != null -> LazyVerticalGrid(
@@ -393,7 +400,7 @@ private fun UserInfoItem(
             style = MaterialTheme.typography.headlineMedium,
         )
         Text(
-            text = user.username,
+            text = stringResource(Res.string.username, user.username),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             style = MaterialTheme.typography.titleMedium,
         )
@@ -464,7 +471,7 @@ private fun UserFollowItem(
                 style = MaterialTheme.typography.titleMedium,
             )
             Text(
-                text = "Following",
+                text = stringResource(Res.string.following),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodyMedium,
             )
@@ -478,7 +485,7 @@ private fun UserFollowItem(
                 style = MaterialTheme.typography.titleMedium,
             )
             Text(
-                text = "Followers",
+                text = stringResource(Res.string.followers),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodyMedium,
             )
@@ -554,12 +561,12 @@ private fun ReloadItem(
         modifier = modifier.padding(16.dp),
     ) {
         Text(
-            text = "Error: $errorMessage",
+            text = stringResource(Res.string.error, errorMessage.orEmpty()),
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentSize(Alignment.Center),
         )
-        Button(onClick = onReload) { Text(text = "Reload") }
+        Button(onClick = onReload) { Text(text = stringResource(Res.string.reload)) }
     }
 }
 
@@ -577,7 +584,7 @@ private fun RetryItem(
             onClick = onRetry,
             modifier = Modifier.align(Alignment.Center),
         ) {
-            Text(text = "Retry")
+            Text(text = stringResource(Res.string.retry))
         }
     }
 }
