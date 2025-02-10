@@ -44,13 +44,14 @@ internal class DetailsViewModel(
             _state.update { it.copy(isDownloading = true) }
             downloadPhotoUseCase(photoId, url)
                 .onSuccess { path ->
+                    println("File successfully saved to $path")
                     _state.update { it.copy(isDownloading = false) }
-                    _events.trySend(Event.Notification("Successfully saved the photo to $path"))
+                    _events.trySend(Event.SavePhotoSucceed)
                 }
                 .onFailure { throwable ->
                     throwable.printStackTrace()
                     _state.update { it.copy(isDownloading = false) }
-                    _events.trySend(Event.Notification("Failed to save the photo"))
+                    _events.trySend(Event.SavePhotoFailed)
                 }
         }
     }
@@ -64,6 +65,7 @@ internal class DetailsViewModel(
     }
 
     sealed interface Event {
-        data class Notification(val message: String) : Event
+        data object SavePhotoSucceed : Event
+        data object SavePhotoFailed : Event
     }
 }

@@ -22,7 +22,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -64,15 +63,19 @@ import navid.multiplash.core.resources.LocalPlatformStrings
 import navid.multiplash.core.resources.Res
 import navid.multiplash.core.resources.details
 import navid.multiplash.core.resources.downloads
+import navid.multiplash.core.resources.ic_bookmark
 import navid.multiplash.core.resources.ic_camera
 import navid.multiplash.core.resources.ic_date
+import navid.multiplash.core.resources.ic_download
 import navid.multiplash.core.resources.ic_location
 import navid.multiplash.core.resources.likes
 import navid.multiplash.core.resources.published_date
+import navid.multiplash.core.resources.save_photo_failed
 import navid.multiplash.core.resources.total_photos
 import navid.multiplash.core.resources.views
 import navid.multiplash.feature.details.ui.DetailsViewModel.Event
 import navid.multiplash.feature.details.usecase.GetPhotoUseCase
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.kodein.di.compose.viewmodel.rememberViewModel
@@ -88,13 +91,14 @@ internal fun DetailsUi(
 ) {
     val viewModel: DetailsViewModel by rememberViewModel(arg = args)
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    val platformStrings = LocalPlatformStrings.current
 
     LaunchedEffect(Unit) {
         viewModel.events.collectLatest { event ->
             when (event) {
-                is Event.Notification -> scope.launch { snackbarHostState.showSnackbar(message = event.message) }
+                is Event.SavePhotoSucceed -> snackbarHostState.showSnackbar(message = getString(platformStrings.savePhotoSucceed))
+                is Event.SavePhotoFailed -> snackbarHostState.showSnackbar(message = getString(Res.string.save_photo_failed))
             }
         }
     }
@@ -153,8 +157,42 @@ private fun DetailsUi(
                 },
                 actions = {
                     IconButton(
+                        onClick = { },
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .clip(CircleShape)
+                            .background(Color.Black.copy(alpha = 0.33F)),
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.ic_bookmark),
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+                    }
+                    state.photo?.let { photo ->
+                        IconButton(
+                            onClick = { onSaveClick(photo.id, photo.downloadLink) },
+                            enabled = !state.isDownloading,
+                            modifier = Modifier
+                                .padding(4.dp)
+                                .clip(CircleShape)
+                                .background(Color.Black.copy(alpha = 0.33F)),
+                        ) {
+                            if (state.isDownloading) {
+                                CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                            } else {
+                                Icon(
+                                    painter = painterResource(Res.drawable.ic_download),
+                                    contentDescription = null,
+                                    tint = Color.White
+                                )
+                            }
+                        }
+                    }
+                    IconButton(
                         onClick = { showBottomSheet = true },
                         modifier = Modifier
+                            .padding(4.dp)
                             .clip(CircleShape)
                             .background(Color.Black.copy(alpha = 0.33F)),
                     ) {
@@ -234,19 +272,6 @@ private fun DetailsUi(
                             photo.device?.let { DeviceItem(device = it) }
                             TagsItem(tags = photo.tags, onTagClick = onTagClick)
                             ProfileItem(photo = photo, onUserClick = onUserClick)
-                            Button(
-                                onClick = { onSaveClick(photo.id, photo.downloadLink) },
-                                enabled = !state.isDownloading,
-                                modifier = Modifier
-                                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                                    .fillMaxWidth(),
-                            ) {
-                                if (state.isDownloading) {
-                                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
-                                } else {
-                                    Text(text = stringResource(LocalPlatformStrings.current.savePhoto))
-                                }
-                            }
                         }
                     }
                 }

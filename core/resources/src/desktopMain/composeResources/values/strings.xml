@@ -1,3 +1,4 @@
 <resources>
     <string name="save_photo">Save to Desktop</string>
+    <string name="save_photo_succeed">Successfully saved the photo to Desktop</string>
 </resources>

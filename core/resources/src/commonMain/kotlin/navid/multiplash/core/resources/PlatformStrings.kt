@@ -7,6 +7,7 @@ expect fun platformStrings(): PlatformStrings
 
 interface PlatformStrings {
     val savePhoto: StringResource
+    val savePhotoSucceed: StringResource
 }
 
 val LocalPlatformStrings = staticCompositionLocalOf<PlatformStrings> { error("No strings available!") }
