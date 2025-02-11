@@ -6,7 +6,6 @@ import org.jetbrains.compose.resources.StringResource
 expect fun platformStrings(): PlatformStrings
 
 interface PlatformStrings {
-    val savePhoto: StringResource
     val savePhotoSucceed: StringResource
 }
 

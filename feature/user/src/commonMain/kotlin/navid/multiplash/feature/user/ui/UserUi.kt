@@ -69,6 +69,7 @@ import navid.multiplash.core.resources.error
 import navid.multiplash.core.resources.followers
 import navid.multiplash.core.resources.following
 import navid.multiplash.core.resources.ic_downloads
+import navid.multiplash.core.resources.ic_favorite
 import navid.multiplash.core.resources.ic_location
 import navid.multiplash.core.resources.ic_views
 import navid.multiplash.core.resources.reload
@@ -98,6 +99,7 @@ internal fun UserUi(
         state = state,
         pagedItems = pagedPhotos,
         onNavigationIconClick = onNavigationIconClick,
+        onFavoriteClick = viewModel::onFavoriteClick,
         onReload = viewModel::onReload,
         onLocationClick = onLocationClick,
         onInterestClick = onInterestClick,
@@ -113,6 +115,7 @@ private fun UserUi(
     state: UserState,
     pagedItems: LazyPagingItems<Photo>,
     onNavigationIconClick: () -> Unit,
+    onFavoriteClick: (String) -> Unit,
     onReload: () -> Unit,
     onLocationClick: (String) -> Unit,
     onInterestClick: (String) -> Unit,
@@ -132,6 +135,14 @@ private fun UserUi(
                             Icon(imageVector = Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
                         }
                     },
+                    actions = {
+                        IconButton(onClick = { state.user?.username?.let(onFavoriteClick) }) {
+                            Icon(
+                                painter = painterResource(Res.drawable.ic_favorite),
+                                contentDescription = null,
+                            )
+                        }
+                    }
                 )
             }
         },
@@ -249,6 +260,21 @@ private fun UserUi(
                     imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                     contentDescription = null,
                     tint = Color.White,
+                )
+            }
+            IconButton(
+                onClick = { state.user?.username?.let(onFavoriteClick) },
+                modifier = Modifier
+                    .padding(horizontal = 4.dp, vertical = 8.dp)
+                    .alpha(1F - min(1, gridState.firstVisibleItemIndex))
+                    .clip(CircleShape)
+                    .background(Color.Black.copy(alpha = 0.33F))
+                    .align(Alignment.TopEnd),
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_favorite),
+                    contentDescription = null,
+                    tint = Color.White
                 )
             }
         }

@@ -39,6 +39,10 @@ internal class DetailsViewModel(
         _state.update { it.copy(isLoading = false) }
     }
 
+    fun onBookmarkClick(photoId: String) {
+
+    }
+
     fun onSaveClick(photoId: String, url: String) {
         viewModelScope.launch {
             _state.update { it.copy(isDownloading = true) }

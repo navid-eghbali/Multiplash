@@ -110,6 +110,7 @@ internal fun DetailsUi(
         onLocationClick = onLocationClick,
         onTagClick = onTagClick,
         onUserClick = onUserClick,
+        onBookmarkClick = viewModel::onBookmarkClick,
         onSaveClick = viewModel::onSaveClick,
         onImageLoading = viewModel::onImageLoading,
         onImageComplete = viewModel::onImageComplete,
@@ -126,6 +127,7 @@ private fun DetailsUi(
     onLocationClick: (String) -> Unit,
     onTagClick: (String) -> Unit,
     onUserClick: (String) -> Unit,
+    onBookmarkClick: (String) -> Unit,
     onSaveClick: (String, String) -> Unit,
     onImageLoading: () -> Unit,
     onImageComplete: () -> Unit,
@@ -157,7 +159,7 @@ private fun DetailsUi(
                 },
                 actions = {
                     IconButton(
-                        onClick = { },
+                        onClick = { state.photo?.let { photo -> onBookmarkClick(photo.id) } },
                         modifier = Modifier
                             .padding(4.dp)
                             .clip(CircleShape)
@@ -169,24 +171,22 @@ private fun DetailsUi(
                             tint = Color.White
                         )
                     }
-                    state.photo?.let { photo ->
-                        IconButton(
-                            onClick = { onSaveClick(photo.id, photo.downloadLink) },
-                            enabled = !state.isDownloading,
-                            modifier = Modifier
-                                .padding(4.dp)
-                                .clip(CircleShape)
-                                .background(Color.Black.copy(alpha = 0.33F)),
-                        ) {
-                            if (state.isDownloading) {
-                                CircularProgressIndicator(modifier = Modifier.size(24.dp))
-                            } else {
-                                Icon(
-                                    painter = painterResource(Res.drawable.ic_download),
-                                    contentDescription = null,
-                                    tint = Color.White
-                                )
-                            }
+                    IconButton(
+                        onClick = { state.photo?.let { photo -> onSaveClick(photo.id, photo.downloadLink) } },
+                        enabled = !state.isDownloading,
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .clip(CircleShape)
+                            .background(Color.Black.copy(alpha = 0.33F)),
+                    ) {
+                        if (state.isDownloading) {
+                            CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                        } else {
+                            Icon(
+                                painter = painterResource(Res.drawable.ic_download),
+                                contentDescription = null,
+                                tint = Color.White
+                            )
                         }
                     }
                     IconButton(

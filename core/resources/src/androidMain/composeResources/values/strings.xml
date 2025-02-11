@@ -1,4 +1,3 @@
 <resources>
-    <string name="save_photo">Save to Gallery</string>
     <string name="save_photo_succeed">Successfully saved the photo to Gallery</string>
 </resources>

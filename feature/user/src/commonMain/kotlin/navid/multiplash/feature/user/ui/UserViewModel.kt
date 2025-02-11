@@ -35,6 +35,10 @@ internal class UserViewModel(
     val pagedPhotos = getUserPhotosUseCase(args.username)
         .cachedIn(viewModelScope)
 
+    fun onFavoriteClick(username: String) {
+
+    }
+
     fun onReload() {
         fetchUser(username = args.username)
         // fetchUserStatistics(username = args.username)
