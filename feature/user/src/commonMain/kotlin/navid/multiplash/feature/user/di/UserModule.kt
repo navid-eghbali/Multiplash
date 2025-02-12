@@ -5,6 +5,7 @@ import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import navid.multiplash.core.async.CoroutineDispatchers
 import navid.multiplash.core.db.DatabaseBuilderFactory
 import navid.multiplash.core.db.KeyValueDatabase
+import navid.multiplash.core.di.Tags
 import navid.multiplash.feature.user.data.remote.UserClient
 import navid.multiplash.feature.user.data.remote.UserClientImpl
 import navid.multiplash.feature.user.data.repository.UserRepository
@@ -29,11 +30,9 @@ import org.kodein.di.bindProvider
 import org.kodein.di.bindSingleton
 import org.kodein.di.instance
 
-private const val FAVORITES_DB_TAG = "FavoritesDb"
-
 val userModule = DI.Module(name = "UserModule") {
 
-    bindSingleton<KeyValueDatabase>(tag = FAVORITES_DB_TAG) {
+    bindSingleton<KeyValueDatabase>(tag = Tags.FAVORITES_DB) {
         val dispatchers: CoroutineDispatchers = instance()
         val builder: RoomDatabase.Builder<KeyValueDatabase> = instance<DatabaseBuilderFactory>().create("favorites.db")
         builder
@@ -52,7 +51,7 @@ val userModule = DI.Module(name = "UserModule") {
     bindSingleton<UserRepository> {
         UserRepositoryImpl(
             userClient = instance(),
-            keyValueDao = instance<KeyValueDatabase>(tag = FAVORITES_DB_TAG).keyValueDao(),
+            keyValueDao = instance<KeyValueDatabase>(tag = Tags.FAVORITES_DB).keyValueDao(),
         )
     }
 

@@ -23,6 +23,9 @@ interface KeyValueDao {
     @Query("SELECT * FROM KeyValue")
     suspend fun getAll(): List<KeyValue>
 
+    @Query("SELECT * FROM KeyValue LIMIT :pageSize OFFSET :page")
+    suspend fun getAllPaged(page: Int, pageSize: Int): List<KeyValue>
+
     @Query("SELECT * FROM KeyValue")
     fun getAllAsFlow(): Flow<List<KeyValue>>
 

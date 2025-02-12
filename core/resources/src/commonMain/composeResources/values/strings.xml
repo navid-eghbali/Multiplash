@@ -18,4 +18,8 @@
     <string name="error">Error: %1$s</string>
     <string name="username">@%1$s</string>
     <string name="save_photo_failed">Failed to save the photo</string>
+    <string name="favorite_users">Favorite Users</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="no_favorite_users">Favorite users will be shown here...</string>
+    <string name="no_bookmarks">Bookmarked photos will be shown here..,</string>
 </resources>

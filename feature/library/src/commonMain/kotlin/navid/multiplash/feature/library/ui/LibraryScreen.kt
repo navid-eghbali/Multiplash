@@ -7,8 +7,14 @@ import kotlinx.serialization.Serializable
 @Serializable
 object LibraryScreen
 
-fun NavGraphBuilder.libraryScreen() {
+fun NavGraphBuilder.libraryScreen(
+    onUserClick: (String) -> Unit,
+    onPhotoClick: (String, String) -> Unit,
+) {
     composable<LibraryScreen> {
-        LibraryUi()
+        LibraryUi(
+            onUserClick = onUserClick,
+            onPhotoClick = onPhotoClick,
+        )
     }
 }

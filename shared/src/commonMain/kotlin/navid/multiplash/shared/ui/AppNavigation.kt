@@ -44,7 +44,7 @@ fun AppNavigation(
         ) {
             exploreGraph(navController)
             searchGraph(navController)
-            libraryGraph()
+            libraryGraph(navController)
         }
     }
 }
@@ -103,8 +103,11 @@ private fun NavGraphBuilder.searchGraph(navController: NavHostController) {
     }
 }
 
-private fun NavGraphBuilder.libraryGraph() {
+private fun NavGraphBuilder.libraryGraph(navController: NavHostController) {
     navigation<LibraryGraph>(startDestination = LibraryScreen) {
-        libraryScreen()
+        libraryScreen(
+            onUserClick = navController::navigateToUserScreen,
+            onPhotoClick = navController::navigateToDetailsScreen,
+        )
     }
 }

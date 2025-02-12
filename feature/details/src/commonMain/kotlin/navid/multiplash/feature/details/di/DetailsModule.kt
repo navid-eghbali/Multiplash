@@ -5,6 +5,7 @@ import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import navid.multiplash.core.async.CoroutineDispatchers
 import navid.multiplash.core.db.DatabaseBuilderFactory
 import navid.multiplash.core.db.KeyValueDatabase
+import navid.multiplash.core.di.Tags
 import navid.multiplash.feature.details.data.remote.DetailsClient
 import navid.multiplash.feature.details.data.remote.DetailsClientImpl
 import navid.multiplash.feature.details.data.repository.DetailsRepository
@@ -27,11 +28,9 @@ import org.kodein.di.bindProvider
 import org.kodein.di.bindSingleton
 import org.kodein.di.instance
 
-private const val BOOKMARKS_DB_TAG = "BookmarksDb"
-
 val detailsModule = DI.Module(name = "DetailsModule") {
 
-    bindSingleton<KeyValueDatabase>(tag = BOOKMARKS_DB_TAG) {
+    bindSingleton<KeyValueDatabase>(tag = Tags.BOOKMARKS_DB) {
         val dispatchers: CoroutineDispatchers = instance()
         val builder: RoomDatabase.Builder<KeyValueDatabase> = instance<DatabaseBuilderFactory>().create("bookmarks.db")
         builder
@@ -49,7 +48,7 @@ val detailsModule = DI.Module(name = "DetailsModule") {
 
     bindSingleton<DetailsRepository> {
         DetailsRepositoryImpl(
-            keyValueDao = instance<KeyValueDatabase>(tag = BOOKMARKS_DB_TAG).keyValueDao(),
+            keyValueDao = instance<KeyValueDatabase>(tag = Tags.BOOKMARKS_DB).keyValueDao(),
         )
     }
 
