@@ -64,6 +64,7 @@ import navid.multiplash.core.resources.Res
 import navid.multiplash.core.resources.details
 import navid.multiplash.core.resources.downloads
 import navid.multiplash.core.resources.ic_bookmark
+import navid.multiplash.core.resources.ic_bookmark_filled
 import navid.multiplash.core.resources.ic_camera
 import navid.multiplash.core.resources.ic_date
 import navid.multiplash.core.resources.ic_download
@@ -127,7 +128,7 @@ private fun DetailsUi(
     onLocationClick: (String) -> Unit,
     onTagClick: (String) -> Unit,
     onUserClick: (String) -> Unit,
-    onBookmarkClick: (String) -> Unit,
+    onBookmarkClick: (String, String) -> Unit,
     onSaveClick: (String, String) -> Unit,
     onImageLoading: () -> Unit,
     onImageComplete: () -> Unit,
@@ -159,14 +160,18 @@ private fun DetailsUi(
                 },
                 actions = {
                     IconButton(
-                        onClick = { state.photo?.let { photo -> onBookmarkClick(photo.id) } },
+                        onClick = { state.photo?.let { photo -> onBookmarkClick(photo.id, state.url) } },
                         modifier = Modifier
                             .padding(4.dp)
                             .clip(CircleShape)
                             .background(Color.Black.copy(alpha = 0.33F)),
                     ) {
                         Icon(
-                            painter = painterResource(Res.drawable.ic_bookmark),
+                            painter = if (state.isBookmarked) {
+                                painterResource(Res.drawable.ic_bookmark_filled)
+                            } else {
+                                painterResource(Res.drawable.ic_bookmark)
+                            },
                             contentDescription = null,
                             tint = Color.White
                         )

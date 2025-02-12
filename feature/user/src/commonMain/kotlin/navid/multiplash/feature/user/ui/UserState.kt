@@ -8,6 +8,7 @@ import navid.multiplash.feature.user.usecase.GetUserUseCase
 internal data class UserState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
+    val isFavorited: Boolean = false,
     val user: GetUserUseCase.User? = null,
     val stats: GetUserStatisticsUseCase.Stats? = null,
 )

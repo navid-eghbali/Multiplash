@@ -17,7 +17,9 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.common)
             implementation(projects.core.api)
+            implementation(projects.core.async)
             implementation(projects.core.data)
+            implementation(projects.core.db)
             implementation(projects.core.di)
             implementation(projects.core.resources)
             implementation(projects.core.ui)

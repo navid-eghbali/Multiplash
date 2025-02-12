@@ -70,6 +70,7 @@ import navid.multiplash.core.resources.followers
 import navid.multiplash.core.resources.following
 import navid.multiplash.core.resources.ic_downloads
 import navid.multiplash.core.resources.ic_favorite
+import navid.multiplash.core.resources.ic_favorite_filled
 import navid.multiplash.core.resources.ic_location
 import navid.multiplash.core.resources.ic_views
 import navid.multiplash.core.resources.reload
@@ -115,7 +116,7 @@ private fun UserUi(
     state: UserState,
     pagedItems: LazyPagingItems<Photo>,
     onNavigationIconClick: () -> Unit,
-    onFavoriteClick: (String) -> Unit,
+    onFavoriteClick: (String, String) -> Unit,
     onReload: () -> Unit,
     onLocationClick: (String) -> Unit,
     onInterestClick: (String) -> Unit,
@@ -136,9 +137,13 @@ private fun UserUi(
                         }
                     },
                     actions = {
-                        IconButton(onClick = { state.user?.username?.let(onFavoriteClick) }) {
+                        IconButton(onClick = { state.user?.let { onFavoriteClick(it.username, it.profileImage) } }) {
                             Icon(
-                                painter = painterResource(Res.drawable.ic_favorite),
+                                painter = if (state.isFavorited) {
+                                    painterResource(Res.drawable.ic_favorite_filled)
+                                } else {
+                                    painterResource(Res.drawable.ic_favorite)
+                                },
                                 contentDescription = null,
                             )
                         }
@@ -263,7 +268,7 @@ private fun UserUi(
                 )
             }
             IconButton(
-                onClick = { state.user?.username?.let(onFavoriteClick) },
+                onClick = { state.user?.let { onFavoriteClick(it.username, it.profileImage) } },
                 modifier = Modifier
                     .padding(horizontal = 4.dp, vertical = 8.dp)
                     .alpha(1F - min(1, gridState.firstVisibleItemIndex))
@@ -272,7 +277,11 @@ private fun UserUi(
                     .align(Alignment.TopEnd),
             ) {
                 Icon(
-                    painter = painterResource(Res.drawable.ic_favorite),
+                    painter = if (state.isFavorited) {
+                        painterResource(Res.drawable.ic_favorite_filled)
+                    } else {
+                        painterResource(Res.drawable.ic_favorite)
+                    },
                     contentDescription = null,
                     tint = Color.White
                 )

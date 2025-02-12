@@ -5,18 +5,26 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import navid.multiplash.feature.details.usecase.BookmarkPhotoUseCase
 import navid.multiplash.feature.details.usecase.DownloadPhotoUseCase
 import navid.multiplash.feature.details.usecase.GetPhotoUseCase
+import navid.multiplash.feature.details.usecase.IsPhotoBookmarkedUseCase
+import navid.multiplash.feature.details.usecase.UnbookmarkPhotoUseCase
 
 internal class DetailsViewModel(
     args: DetailsScreen,
+    isPhotoBookmarkedUseCase: IsPhotoBookmarkedUseCase,
     private val getPhotoUseCase: GetPhotoUseCase,
     private val downloadPhotoUseCase: DownloadPhotoUseCase,
+    private val bookmarkPhotoUseCase: BookmarkPhotoUseCase,
+    private val unbookmarkPhotoUseCase: UnbookmarkPhotoUseCase,
 ) : ViewModel() {
 
     private val _events = Channel<Event>(Channel.CONFLATED)
@@ -31,6 +39,12 @@ internal class DetailsViewModel(
             initialValue = DetailsState(url = args.photoUrl)
         )
 
+    init {
+        isPhotoBookmarkedUseCase(args.photoId)
+            .onEach { bookmarked -> _state.update { it.copy(isBookmarked = bookmarked) } }
+            .launchIn(viewModelScope)
+    }
+
     fun onImageLoading() {
         _state.update { it.copy(isLoading = true) }
     }
@@ -39,8 +53,14 @@ internal class DetailsViewModel(
         _state.update { it.copy(isLoading = false) }
     }
 
-    fun onBookmarkClick(photoId: String) {
-
+    fun onBookmarkClick(photoId: String, url: String) {
+        viewModelScope.launch {
+            if (_state.value.isBookmarked) {
+                unbookmarkPhotoUseCase(photoId)
+            } else {
+                bookmarkPhotoUseCase(photoId, url)
+            }
+        }
     }
 
     fun onSaveClick(photoId: String, url: String) {

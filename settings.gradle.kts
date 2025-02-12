@@ -21,6 +21,7 @@ include(
     ":core:api",
     ":core:async",
     ":core:data",
+    ":core:db",
     ":core:di",
     ":core:resources",
     ":core:ui",
