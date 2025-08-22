@@ -20,6 +20,7 @@ kotlin {
         }
         commonMain.dependencies {
             api(libs.chrisbanes.material3.windowsizeclass)
+            api(libs.androidx.lifecycle.runtime.compose)
             api(libs.androidx.lifecycle.viewmodel.compose)
             api(libs.androidx.navigation.compose)
 

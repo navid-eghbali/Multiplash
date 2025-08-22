@@ -14,8 +14,8 @@ internal fun interface GetUserUseCase {
         val profileImage: String,
         val bio: String?,
         val location: String?,
-        val followingCount: String,
-        val followersCount: String,
+        val followingCount: String?,
+        val followersCount: String?,
         val interests: List<String>,
     )
 
@@ -36,8 +36,8 @@ internal class GetUserUseCaseImpl(
                         profileImage = profileImage.large,
                         bio = bio,
                         location = location,
-                        followingCount = followingCount.toString(),
-                        followersCount = followersCount.toString(),
+                        followingCount = followingCount?.toString(),
+                        followersCount = followersCount?.toString(),
                         interests = tags.interests.map { tag ->
                             tag.title.lowercase().replaceFirstChar { it.titlecase() }
                         },

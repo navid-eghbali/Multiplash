@@ -28,6 +28,7 @@ actual fun provideHttpClient(): HttpClient = HttpClient(OkHttp) {
                 prettyPrint = true
                 isLenient = true
                 ignoreUnknownKeys = true
+                explicitNulls = false
             }
         )
     }

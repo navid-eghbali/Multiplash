@@ -21,8 +21,8 @@ internal object GetUser {
         @SerialName("total_photos") val totalPhotos: Long,
         val photos: List<Photo>,
         val tags: Tags,
-        @SerialName("followers_count") val followersCount: Long,
-        @SerialName("following_count") val followingCount: Long,
+        @SerialName("followers_count") val followersCount: Long?,
+        @SerialName("following_count") val followingCount: Long?,
         val downloads: Long,
     ) {
         @Serializable

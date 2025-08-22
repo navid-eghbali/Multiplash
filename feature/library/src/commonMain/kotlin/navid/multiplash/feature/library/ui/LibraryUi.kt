@@ -20,13 +20,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +33,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.cash.paging.LoadStateNotLoading
 import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.collectAsLazyPagingItems
@@ -56,7 +55,7 @@ internal fun LibraryUi(
     modifier: Modifier = Modifier,
 ) {
     val viewModel: LibraryViewModel by rememberViewModel()
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val pagedBookmarks = viewModel.pagedBookmarks.collectAsLazyPagingItems()
 
     LibraryUi(
@@ -68,7 +67,7 @@ internal fun LibraryUi(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LibraryUi(
     state: LibraryState,
@@ -98,7 +97,7 @@ private fun LibraryUi(
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         Text(
                             text = stringResource(Res.string.favorite_users),
-                            style = MaterialTheme.typography.headlineMediumEmphasized,
+                            style = MaterialTheme.typography.headlineMedium,
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                         )
                     }
@@ -149,7 +148,7 @@ private fun LibraryUi(
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         Text(
                             text = stringResource(Res.string.bookmarks),
-                            style = MaterialTheme.typography.headlineMediumEmphasized,
+                            style = MaterialTheme.typography.headlineMedium,
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                         )
                     }

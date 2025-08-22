@@ -210,11 +210,13 @@ private fun UserUi(
                             )
                         }
                     }
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        UserFollowItem(
-                            user = state.user,
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                        )
+                    if (state.user.followersCount != null || state.user.followingCount != null) {
+                        item(span = { GridItemSpan(maxLineSpan) }) {
+                            UserFollowItem(
+                                user = state.user,
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                            )
+                        }
                     }
                     if (state.user.interests.isNotEmpty()) {
                         item(span = { GridItemSpan(maxLineSpan) }) {
@@ -497,33 +499,37 @@ private fun UserFollowItem(
             .padding(top = 8.dp)
             .fillMaxWidth(),
     ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = user.followingCount,
-                style = MaterialTheme.typography.titleMedium,
-            )
-            Text(
-                text = stringResource(Res.string.following),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                style = MaterialTheme.typography.bodyMedium,
-            )
+        user.followingCount?.let { count ->
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = count,
+                    style = MaterialTheme.typography.titleMedium,
+                )
+                Text(
+                    text = stringResource(Res.string.following),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
         }
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = user.followersCount,
-                style = MaterialTheme.typography.titleMedium,
-            )
-            Text(
-                text = stringResource(Res.string.followers),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                style = MaterialTheme.typography.bodyMedium,
-            )
+        user.followersCount?.let { count ->
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = count,
+                    style = MaterialTheme.typography.titleMedium,
+                )
+                Text(
+                    text = stringResource(Res.string.followers),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
         }
     }
 }

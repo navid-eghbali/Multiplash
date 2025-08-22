@@ -1,7 +1,8 @@
 package navid.multiplash.feature.details.usecase
 
-import kotlinx.datetime.Clock
 import navid.multiplash.feature.details.data.remote.DetailsClient
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 internal fun interface DownloadPhotoUseCase {
     suspend operator fun invoke(
@@ -10,6 +11,7 @@ internal fun interface DownloadPhotoUseCase {
     ): Result<String>
 }
 
+@OptIn(ExperimentalTime::class)
 internal class DownloadPhotoUseCaseImpl(
     private val detailsClient: DetailsClient,
     private val saveToFileUseCase: SaveToFileUseCase,

@@ -20,6 +20,7 @@ actual fun provideHttpClient(): HttpClient = HttpClient(Darwin) {
                 prettyPrint = true
                 isLenient = true
                 ignoreUnknownKeys = true
+                explicitNulls = false
             }
         )
     }

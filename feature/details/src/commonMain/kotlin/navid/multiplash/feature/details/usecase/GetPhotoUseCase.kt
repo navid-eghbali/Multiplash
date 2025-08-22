@@ -1,12 +1,13 @@
 package navid.multiplash.feature.details.usecase
 
-import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import navid.multiplash.common.ext.fromHexColorToLong
 import navid.multiplash.common.ext.withDecimalSeparator
 import navid.multiplash.core.data.User
 import navid.multiplash.feature.details.data.remote.DetailsClient
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 internal fun interface GetPhotoUseCase {
 
@@ -32,6 +33,7 @@ internal fun interface GetPhotoUseCase {
     )
 }
 
+@OptIn(ExperimentalTime::class)
 internal class GetPhotoUseCaseImpl(
     private val detailsClient: DetailsClient,
 ) : GetPhotoUseCase {
